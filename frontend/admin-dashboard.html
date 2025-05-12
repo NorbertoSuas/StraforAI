@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Innovation Meetup</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        :root {
+            --strafor-red: #E74C3C;
+            --strafor-blue: #23313C;
+            --strafor-light: #f5f7fa;
+            --sidebar-width: 280px;
+        }
+
+        [data-theme="light"] {
+            --bg-main: #f5f7fa;
+            --bg-card: #fff;
+            --text-color: #23313C;
+            --border-color: rgba(0, 0, 0, 0.05);
+            --hover-bg: rgba(226, 55, 68, 0.05);
+            --table-hover: rgba(226, 55, 68, 0.02);
+            --input-border: #e1e1e1;
+            --shadow-color: rgba(0, 0, 0, 0.05);
+        }
+
+        [data-theme="dark"] {
+            --bg-main: #181f2a;
+            --bg-card: #232b3a;
+            --text-color: #f5f7fa;
+            --border-color: #2c3440;
+            --hover-bg: rgba(231, 76, 60, 0.10);
+            --table-hover: rgba(231, 76, 60, 0.08);
+            --input-border: #2c3440;
+            --shadow-color: rgba(20, 30, 50, 0.25);
+        }
+
+        body {
+            background-color: var(--bg-main);
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            overflow-x: hidden;
+            color: var(--text-color);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: var(--sidebar-width);
+            background: linear-gradient(135deg, var(--bg-card) 60%, var(--bg-main) 100%);
+            box-shadow: 4px 0 24px var(--shadow-color);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-logo {
+            padding: 2rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .sidebar-logo img {
+            width: 150px;
+            height: 150px;
+            object-fit: contain;
+            margin-bottom: 0.5rem;
+            filter: drop-shadow(0 4px 16px rgba(35,49,60,0.15));
+        }
+
+        .sidebar-nav {
+            list-style: none;
+            padding: 1.5rem 0;
+            margin: 0;
+        }
+
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+            font-weight: 500;
+        }
+
+        .sidebar-nav a:hover {
+            background-color: var(--hover-bg);
+            color: var(--strafor-red);
+            border-left-color: var(--strafor-red);
+        }
+
+        .sidebar-nav a.active {
+            background-color: var(--hover-bg);
+            color: var(--strafor-red);
+            border-left-color: var(--strafor-red);
+        }
+
+        .sidebar-nav i {
+            font-size: 1.25rem;
+            margin-right: 1rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 2rem;
+            min-height: 100vh;
+            background: linear-gradient(120deg, var(--bg-main) 0%, var(--bg-card) 100%);
+        }
+
+        .tm-card {
+            background: linear-gradient(120deg, var(--bg-card) 80%, var(--bg-main) 100%);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(35,49,60,0.10);
+            margin-bottom: 2rem;
+            overflow: hidden;
+            border: 1.5px solid #eaeaea;
+        }
+
+        .card-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            background-color: var(--bg-card);
+        }
+
+        .card-header h5 {
+            margin: 0;
+            font-weight: 600;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+        }
+
+        .card-header h5 i {
+            margin-right: 0.75rem;
+            color: var(--text-color);
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, #E74C3C 60%, #23313C 100%);
+            color: #fff;
+            font-weight: 700;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(231,76,60,0.12);
+            border: 1.5px solid #fff1;
+            transition: background 0.2s, box-shadow 0.2s;
+            padding: 0.75rem 1.25rem;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(90deg, #23313C 0%, #E74C3C 100%);
+            box-shadow: 0 4px 16px rgba(35,49,60,0.18);
+            transform: translateY(-2px) scale(1.03);
+        }
+
+        .table {
+            margin-bottom: 0;
+            color: var(--text-color);
+        }
+
+        .table th {
+            font-weight: 600;
+            color: var(--text-color);
+            border-bottom-width: 1px;
+            padding: 1rem;
+        }
+
+        .table td {
+            padding: 1rem;
+            vertical-align: middle;
+        }
+
+        .table tbody tr:hover {
+            background-color: var(--table-hover);
+        }
+
+        .form-control, .form-select {
+            border-radius: 10px;
+            border: 2px solid #e1e1e1;
+            font-size: 1.05rem;
+            transition: border 0.3s, box-shadow 0.3s;
+            background-color: var(--bg-card);
+            color: var(--input-text);
+            box-shadow: 0 1px 4px rgba(35,49,60,0.04);
+            padding: 0.75rem 1rem;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #E74C3C;
+            box-shadow: 0 0 0 0.2rem rgba(231, 76, 60, 0.18);
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: var(--text-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .alert {
+            border-radius: 8px;
+            padding: 1rem 1.25rem;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            border: none;
+            padding: 0.75rem 1.25rem;
+            font-weight: 500;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .theme-toggle {
+            position: absolute;
+            bottom: 1rem;
+            left: 0;
+            right: 0;
+            padding: 1rem;
+            text-align: center;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .theme-toggle button {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .theme-toggle button:hover {
+            background-color: var(--hover-bg);
+            color: var(--strafor-red);
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .sidebar.show {
+                transform: translateX(0);
+            }
+        }
+
+        .admin-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .admin-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px var(--shadow-color);
+        }
+
+        .admin-card .admin-avatar {
+            width: 64px;
+            height: 64px;
+            background: var(--strafor-red);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .admin-card .admin-info {
+            padding: 1.5rem;
+        }
+
+        .admin-card .admin-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+        }
+
+        .admin-card .admin-email {
+            color: var(--text-color);
+            opacity: 0.8;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+            word-break: break-all;
+        }
+
+        .admin-card .admin-role {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: rgba(231, 76, 60, 0.08);
+            color: var(--strafor-red);
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        .admin-card .admin-last-login {
+            font-size: 0.875rem;
+            color: var(--text-color);
+            opacity: 0.7;
+        }
+
+        .admin-card .admin-last-login i {
+            margin-right: 0.5rem;
+        }
+
+        .status-overview {
+            margin-bottom: 2rem;
+        }
+
+        .status-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .status-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px var(--shadow-color);
+        }
+
+        .status-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .admin-status .status-icon {
+            background: rgba(231, 76, 60, 0.08);
+            color: var(--strafor-red);
+        }
+
+        .hr-status .status-icon {
+            background: rgba(var(--strafor-blue-rgb), 0.1);
+            color: var(--strafor-blue);
+        }
+
+        .status-info {
+            flex: 1;
+        }
+
+        .status-count {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0;
+            color: var(--text-color);
+        }
+
+        .status-label {
+            font-size: 0.875rem;
+            color: var(--text-color);
+            opacity: 0.7;
+            margin: 0.25rem 0;
+        }
+
+        .status-detail {
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+        }
+
+        .active-status {
+            color: #28a745;
+        }
+
+        .inactive-status {
+            color: #dc3545;
+        }
+
+        .separator {
+            margin: 0 0.5rem;
+            opacity: 0.5;
+        }
+
+        .status-card {
+            cursor: pointer;
+        }
+
+        .status-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px var(--shadow-color);
+        }
+
+        .modal-content {
+            background: var(--bg-card);
+            color: var(--text-color);
+        }
+
+        .modal-header {
+            border-bottom-color: var(--border-color);
+        }
+
+        .nav-tabs {
+            border-bottom-color: var(--border-color);
+        }
+
+        .nav-tabs .nav-link {
+            color: var(--text-color);
+            border: none;
+            border-bottom: 2px solid transparent;
+            padding: 0.75rem 1.25rem;
+        }
+
+        .nav-tabs .nav-link:hover {
+            border-color: var(--strafor-red);
+        }
+
+        .nav-tabs .nav-link.active {
+            background: none;
+            border-bottom: 2px solid var(--strafor-red);
+            color: var(--strafor-red);
+        }
+
+        .table {
+            color: var(--text-color);
+        }
+
+        .table th {
+            border-bottom-color: var(--border-color);
+        }
+
+        .table td {
+            border-bottom-color: var(--border-color);
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-logo">
+            <img src="assets/ChatGPT-Image-3-may-2025_-00_45_24.svg" alt="STRAFOR.AI Logo">
+        </div>
+        <ul class="sidebar-nav">
+            <li>
+                <a href="#" onclick="showHRAccounts()">
+                    <i class="bi bi-people-fill"></i>
+                    HR Accounts
+                </a>
+            </li>
+            <li>
+                <a href="#" onclick="showAdminAccounts()">
+                    <i class="bi bi-person-badge-fill"></i>
+                    Admin Accounts
+                </a>
+            </li>
+            <li>
+                <a href="#" onclick="showAPIManagement()">
+                    <i class="bi bi-gear-fill"></i>
+                    API Management
+                </a>
+            </li>
+            <li>
+                <a href="#" onclick="showRegistrationForm()">
+                    <i class="bi bi-person-plus-fill"></i>
+                    Register HR
+                </a>
+            </li>
+            <li>
+                <a href="#" onclick="logout()">
+                    <i class="bi bi-box-arrow-right"></i>
+                    Logout
+                </a>
+            </li>
+        </ul>
+        <div class="theme-toggle">
+            <button onclick="toggleTheme()" id="themeToggleBtn">
+                <i class="bi bi-sun-fill"></i>
+                <span>Toggle Theme</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container-fluid">
+            <!-- HR Accounts Section -->
+            <div id="hrAccountsSection" class="tm-card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5><i class="bi bi-people me-2"></i>HR Accounts</h5>
+                    <button class="btn btn-primary btn-sm" onclick="showRegistrationForm()">
+                        <i class="bi bi-person-plus me-2"></i>Register New HR
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div id="hrAccountsTableContainer">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Location</th>
+                                    <th>Last Login</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="hrAccountsTableBody">
+                                <!-- HR accounts will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="hrAccountsError" class="alert alert-danger d-none"></div>
+                    <div id="noHRAccountsMessage" class="text-center text-muted p-4 d-none">
+                        <i class="bi bi-people fs-1"></i>
+                        <p class="mt-3">No HR accounts found</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Registration Form Section -->
+            <div id="registrationSection" class="tm-card d-none">
+                <div class="card-header">
+                    <h5><i class="bi bi-person-plus me-2"></i>Register New HR</h5>
+                </div>
+                <div class="card-body">
+                    <form id="registrationForm">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">First Name</label>
+                                <input type="text" class="form-control" name="firstName" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Last Name</label>
+                                <input type="text" class="form-control" name="lastName" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" name="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Password</label>
+                            <input type="password" class="form-control" name="password" required>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Country</label>
+                                <select class="form-select" name="country" required onchange="loadStates(this.value, 'registration')">
+                                    <option value="">Select Country</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">City</label>
+                                <select class="form-select" name="city" required>
+                                    <option value="">Select City</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <button type="button" class="btn btn-secondary" onclick="showHRAccounts()">
+                                <i class="bi bi-arrow-left me-2"></i>Back
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-person-plus me-2"></i>Register HR
+                            </button>
+                        </div>
+                        <div id="registrationError" class="alert alert-danger mt-3 d-none"></div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Edit Form Section -->
+            <div id="editSection" class="tm-card d-none">
+                <div class="card-header">
+                    <h5><i class="bi bi-pencil me-2"></i>Edit HR Account</h5>
+                </div>
+                <div class="card-body">
+                    <form id="editForm">
+                        <input type="hidden" name="accountId">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">First Name</label>
+                                <input type="text" class="form-control" name="firstName" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Last Name</label>
+                                <input type="text" class="form-control" name="lastName" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" name="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Password</label>
+                            <input type="password" class="form-control" name="password" placeholder="Leave blank to keep current password">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Country</label>
+                                <select class="form-select" name="country" required onchange="loadStates(this.value, 'edit')">
+                                    <option value="">Select Country</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">City</label>
+                                <select class="form-select" name="city" required>
+                                    <option value="">Select City</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <button type="button" class="btn btn-secondary" onclick="showHRAccounts()">
+                                <i class="bi bi-arrow-left me-2"></i>Back
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-lg me-2"></i>Save Changes
+                            </button>
+                        </div>
+                        <div id="editError" class="alert alert-danger mt-3 d-none"></div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Admin Accounts Section -->
+            <div id="adminAccountsSection" class="tm-card d-none">
+                <div class="card-header">
+                    <h5><i class="bi bi-person-badge me-2"></i>Admin Information</h5>
+                </div>
+                <div class="card-body">
+                    <div id="adminAccountsError" class="alert alert-danger d-none"></div>
+                    <div id="adminAccountsContainer" class="row g-4">
+                        <!-- Admin accounts will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- API Management Section -->
+            <div id="apiManagementSection" class="tm-card d-none">
+                <div class="card-header">
+                    <h5><i class="bi bi-gear me-2"></i>API Management</h5>
+                </div>
+                <div class="card-body">
+                    <!-- LinkedIn API Configuration -->
+                    <div class="mb-4">
+                        <h6 class="mb-3"><i class="bi bi-linkedin me-2"></i>LinkedIn API Configuration</h6>
+                        <form id="linkedinApiForm">
+                            <div class="mb-3">
+                                <label class="form-label">Client ID</label>
+                                <input type="text" class="form-control" name="linkedinClientId" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Client Secret</label>
+                                <input type="password" class="form-control" name="linkedinClientSecret" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Redirect URI</label>
+                                <input type="url" class="form-control" name="linkedinRedirectUri" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-save me-2"></i>Save LinkedIn Configuration
+                            </button>
+                        </form>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <!-- OCC Mundial API Configuration -->
+                    <div class="mb-4">
+                        <h6 class="mb-3"><i class="bi bi-briefcase me-2"></i>OCC Mundial API Configuration</h6>
+                        <form id="occApiForm">
+                            <div class="mb-3">
+                                <label class="form-label">API Key</label>
+                                <input type="text" class="form-control" name="occApiKey" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">API Secret</label>
+                                <input type="password" class="form-control" name="occApiSecret" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Environment</label>
+                                <select class="form-select" name="occEnvironment" required>
+                                    <option value="sandbox">Sandbox</option>
+                                    <option value="production">Production</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-save me-2"></i>Save OCC Configuration
+                            </button>
+                        </form>
+                    </div>
+
+                    <div id="apiManagementError" class="alert alert-danger mt-3 d-none"></div>
+                    <div id="apiManagementSuccess" class="alert alert-success mt-3 d-none"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/theme-manager.js"></script>
+    <script>
+        // Check authentication on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const token = localStorage.getItem('token');
+            const userRole = localStorage.getItem('userRole');
+            
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            if (userRole !== 'admin') {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // Start periodic status refresh
+            startStatusRefresh();
+        });
+
+        // API Configuration
+        const API_CONFIG = {
+            baseUrl: 'http://localhost:3000'
+        };
+
+        // Load HR accounts function
+        async function loadHRAccounts() {
+            const token = localStorage.getItem('token');
+            const tableBody = document.getElementById('hrAccountsTableBody');
+            const errorDiv = document.getElementById('hrAccountsError');
+            const noAccountsDiv = document.getElementById('noHRAccountsMessage');
+            
+            try {
+                const response = await fetch(`${API_CONFIG.baseUrl}/api/hr-accounts`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to load HR accounts');
+                }
+
+                const accounts = await response.json();
+                
+                if (accounts.length === 0) {
+                    tableBody.innerHTML = '';
+                    errorDiv.classList.add('d-none');
+                    noAccountsDiv.classList.remove('d-none');
+                    return;
+                }
+
+                noAccountsDiv.classList.add('d-none');
+                errorDiv.classList.add('d-none');
+                
+                tableBody.innerHTML = accounts.map(account => {
+                    const lastLoginDate = new Date(account.lastLogin);
+                    const formattedDate = lastLoginDate.toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric'
+                    });
+                    const formattedTime = lastLoginDate.toLocaleTimeString('en-US', {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+
+                    return `
+                        <tr>
+                            <td>${account.firstName} ${account.lastName}</td>
+                            <td>${account.email}</td>
+                            <td>${account.location.city}, ${account.location.country}</td>
+                            <td>${formattedDate} at ${formattedTime}</td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-primary me-2" onclick="editHRAccount('${account._id}')">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger" onclick="deleteHRAccount('${account._id}')">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            } catch (error) {
+                console.error('Error loading HR accounts:', error);
+                errorDiv.textContent = error.message;
+                errorDiv.classList.remove('d-none');
+                noAccountsDiv.classList.add('d-none');
+            }
+        }
+
+        // Load countries for the registration form
+        async function loadCountries() {
+            const countrySelect = document.querySelector('#registrationForm select[name="country"]');
+            const errorDiv = document.getElementById('registrationError');
+            
+            try {
+                const response = await fetch(`${API_CONFIG.baseUrl}/api/countries`);
+                if (!response.ok) {
+                    throw new Error('Failed to load countries list');
+                }
+                
+                const countries = await response.json();
+                
+                // Clear existing options except the placeholder
+                countrySelect.innerHTML = '<option value="">Select Country</option>';
+                
+                // Sort countries alphabetically
+                countries.forEach(country => {
+                    const option = document.createElement('option');
+                    option.value = country;
+                    option.textContent = country;
+                    countrySelect.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error loading countries:', error);
+                errorDiv.textContent = 'Error loading countries list. Please try refreshing the page.';
+                errorDiv.classList.remove('d-none');
+            }
+        }
+
+        // Delete HR account function
+        async function deleteHRAccount(accountId) {
+            if (!confirm('Are you sure you want to delete this HR account? This action cannot be undone.')) {
+                return;
+            }
+
+            const token = localStorage.getItem('token');
+            
+            try {
+                const response = await fetch(`${API_CONFIG.baseUrl}/api/hr-accounts/${accountId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to delete HR account');
+                }
+
+                // Reload the HR accounts list
+                loadHRAccounts();
+            } catch (error) {
+                console.error('Error deleting HR account:', error);
+                alert('Error deleting HR account. Please try again.');
+            }
+        }
+
+        // Handle registration form submission
+        document.getElementById('registrationForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const token = localStorage.getItem('token');
+            const errorDiv = document.getElementById('registrationError');
+            
+            const registrationData = {
+                firstName: formData.get('firstName').trim(),
+                lastName: formData.get('lastName').trim(),
+                email: formData.get('email').trim(),
+                password: formData.get('password'),
+                role: 'hr',
+                location: {
+                    country: formData.get('country'),
+                    city: formData.get('city').trim()
+                }
+            };
+            
+            try {
+                const response = await fetch(`${API_CONFIG.baseUrl}/api/auth/register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(registrationData)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'Registration failed');
+                }
+
+                // Reset form and show success message
+                e.target.reset();
+                errorDiv.classList.add('d-none');
+                showHRAccounts();
+                loadHRAccounts();
+            } catch (error) {
+                console.error('Error:', error);
+                errorDiv.textContent = error.message || 'Registration failed';
+                errorDiv.classList.remove('d-none');
+            }
+        });
+
+        // Navigation functions with data attributes
+        function showHRAccounts() {
+            hideAllSections();
+            document.getElementById('hrAccountsSection').classList.remove('d-none');
+            loadHRAccounts();
+            setActiveNavItem('HR Accounts');
+        }
+
+        function showAdminAccounts() {
+            hideAllSections();
+            document.getElementById('adminAccountsSection').classList.remove('d-none');
+            loadAdminAccounts();
+            setActiveNavItem('Admin Accounts');
+        }
+
+        function showAPIManagement() {
+            hideAllSections();
+            document.getElementById('apiManagementSection').classList.remove('d-none');
+            loadAPIConfigurations();
+            setActiveNavItem('API Management');
+        }
+
+        function showRegistrationForm() {
+            hideAllSections();
+            document.getElementById('registrationSection').classList.remove('d-none');
+            setActiveNavItem('Register HR');
+            // Load countries when showing the registration form
+            loadCountries();
+        }
+
+        function showEditForm() {
+            hideAllSections();
+            document.getElementById('editSection').classList.remove('d-none');
+        }
+
+        function hideAllSections() {
+            const sections = [
+                'hrAccountsSection',
+                'registrationSection',
+                'editSection',
+                'adminAccountsSection',
+                'apiManagementSection'
+            ];
+            sections.forEach(section => {
+                document.getElementById(section).classList.add('d-none');
+            });
+        }
+
+        async function logout() {
+            const token = localStorage.getItem('token');
+            try {
+                // Call logout API to update status
+                const response = await fetch(`${API_CONFIG.baseUrl}/api/auth/logout`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Error during logout: ' + (await response.json()).message);
+                }
+
+                // Refresh the account status one last time before redirecting
+                await loadHRAccounts();
+                await new Promise(resolve => setTimeout(resolve, 500)); // Small delay to ensure UI updates
+
+                // Clear local storage and redirect
+                localStorage.removeItem('token');
+                localStorage.removeItem('userRole');
+                window.location.href = 'login.html';
+            } catch (error) {
+                console.error('Error during logout:', error);
+                // Still clear storage and redirect even if the API call fails
+                localStorage.removeItem('token');
+                localStorage.removeItem('userRole');
+                window.location.href = 'login.html';
+            }
+        }
+
+        // Edit HR account function
+        async function editHRAccount(accountId) {
+            const token = localStorage.getItem('token');
+            const errorDiv = document.getElementById('editError');
+            
+            try {
+                // First, ensure the countries are loaded in the edit form
+                await loadCountriesForEdit();
+
+                const response = await fetch(`${API_CONFIG.baseUrl}/api/hr-accounts/${accountId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'Failed to fetch HR account details');
+                }
+
+                const account = await response.json();
+                
+                // Populate the edit form
+                const editForm = document.getElementById('editForm');
+                editForm.querySelector('[name="accountId"]').value = account._id;
+                editForm.querySelector('[name="firstName"]').value = account.firstName;
+                editForm.querySelector('[name="lastName"]').value = account.lastName;
+                editForm.querySelector('[name="email"]').value = account.email;
+                editForm.querySelector('[name="password"]').value = '';
+                
+                // Set country and load states
+                const countrySelect = editForm.querySelector('[name="country"]');
+                countrySelect.value = account.location.country;
+                await loadStates(account.location.country, 'edit');
+                
+                // Set state after states are loaded
+                const stateSelect = editForm.querySelector('[name="city"]');
+                stateSelect.value = account.location.city;
+
+                // Hide any previous error messages
+                errorDiv.classList.add('d-none');
+                showEditForm();
+            } catch (error) {
+                console.error('Error fetching HR account details:', error);
+                errorDiv.textContent = error.message || 'Error loading HR account details. Please try again.';
+                errorDiv.classList.remove('d-none');
+            }
+        }
+
+        // Load countries for edit form
+        async function loadCountriesForEdit() {
+            const countrySelect = document.querySelector('#editForm select[name="country"]');
+            const errorDiv = document.getElementById('editError');
+            
+            try {
+                const response = await fetch(`${API_CONFIG.baseUrl}/api/countries`);
+                if (!response.ok) {
+                    throw new Error('Failed to load countries list');
+                }
+                
+                const countries = await response.json();
+                
+                // Clear existing options except the placeholder
+                countrySelect.innerHTML = '<option value="">Select Country</option>';
+                
+                // Sort countries alphabetically
+                countries.forEach(country => {
+                    const option = document.createElement('option');
+                    option.value = country;
+                    option.textContent = country;
+                    countrySelect.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error loading countries:', error);
+                errorDiv.textContent = 'Error loading countries list. Please try refreshing the page.';
+                errorDiv.classList.remove('d-none');
+                throw error;
+            }
+        }
+
+        // Load states based on selected country
+        async function loadStates(country, formType) {
+            if (!country) return;
+
+            const form = formType === 'edit' ? '#editForm' : '#registrationForm';
+            const stateSelect = document.querySelector(`${form} select[name="city"]`);
+            const errorDiv = document.getElementById(formType === 'edit' ? 'editError' : 'registrationError');
+            
+            try {
+                const response = await fetch(`${API_CONFIG.baseUrl}/api/countries/${encodeURIComponent(country)}/states`);
+                if (!response.ok) {
+                    throw new Error('Failed to load states list');
+                }
+                
+                const states = await response.json();
+                
+                // Clear existing options except the placeholder
+                stateSelect.innerHTML = '<option value="">Select State/Region</option>';
+                
+                // Add states to select
+                states.forEach(state => {
+                    const option = document.createElement('option');
+                    option.value = state;
+                    option.textContent = state;
+                    stateSelect.appendChild(option);
+                });
+
+                // Enable the state select
+                stateSelect.disabled = false;
+            } catch (error) {
+                console.error('Error loading states:', error);
+                errorDiv.textContent = 'Error loading states list. Please try refreshing the page.';
+                errorDiv.classList.remove('d-none');
+            }
+        }
+
+        // Handle edit form submission
+        document.getElementById('editForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const token = localStorage.getItem('token');
+            const errorDiv = document.getElementById('editError');
+            const accountId = formData.get('accountId');
+            
+            const updateData = {
+                firstName: formData.get('firstName').trim(),
+                lastName: formData.get('lastName').trim(),
+                email: formData.get('email').trim(),
+                location: {
+                    country: formData.get('country'),
+                    city: formData.get('city').trim()
+                }
+            };
+
+            // Only include password if it's not empty
+            const password = formData.get('password');
+            if (password) {
+                updateData.password = password;
+            }
+            
+            try {
+                const response = await fetch(`${API_CONFIG.baseUrl}/api/hr-accounts/${accountId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(updateData)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'Update failed');
+                }
+
+                // Reset form and show success message
+                e.target.reset();
+                errorDiv.classList.add('d-none');
+                showHRAccounts();
+            } catch (error) {
+                console.error('Error:', error);
+                errorDiv.textContent = error.message || 'Update failed';
+                errorDiv.classList.remove('d-none');
+            }
+        });
+
+        // Store accounts data globally
+        let adminAccountsData = [];
+        let hrAccountsData = [];
+
+        // Update the loadAdminAccounts function
+        async function loadAdminAccounts() {
+            const token = localStorage.getItem('token');
+            const container = document.getElementById('adminAccountsContainer');
+            const errorDiv = document.getElementById('adminAccountsError');
+            
+            try {
+                // Fetch admin accounts
+                const response = await fetch(`${API_CONFIG.baseUrl}/api/admin-accounts`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to load admin accounts');
+                }
+
+                adminAccountsData = await response.json();
+                
+                // Render admin cards
+                renderAdminCards();
+            } catch (error) {
+                console.error('Error loading accounts:', error);
+                errorDiv.textContent = error.message;
+                errorDiv.classList.remove('d-none');
+            }
+        }
+
+        function renderAdminCards() {
+            const container = document.getElementById('adminAccountsContainer');
+            const now = new Date();
+
+            container.innerHTML = adminAccountsData.map(account => {
+                const initials = `${account.firstName[0]}${account.lastName[0]}`.toUpperCase();
+                const lastLoginDate = new Date(account.lastLogin);
+                const formattedDate = lastLoginDate.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                });
+                const formattedTime = lastLoginDate.toLocaleTimeString('en-US', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+
+                return `
+                    <div class="col-md-6">
+                        <div class="admin-card">
+                            <div class="admin-info">
+                                <div class="admin-avatar">
+                                    ${initials}
+                                </div>
+                                <div class="admin-name">
+                                    ${account.firstName} ${account.lastName}
+                                </div>
+                                <div class="admin-email">
+                                    ${account.email}
+                                </div>
+                                <div class="admin-role">
+                                    ${account.role}
+                                </div>
+                                <div class="admin-last-login">
+                                    <i class="bi bi-clock-history"></i>
+                                    Last login: ${formattedDate} at ${formattedTime}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function setActiveNavItem(sectionName) {
+            document.querySelectorAll('.sidebar-nav a').forEach(item => {
+                item.classList.remove('active');
+                if (item.textContent.trim() === sectionName) {
+                    item.classList.add('active');
+                }
+            });
+        }
+
+        async function loadAPIConfigurations() {
+            const token = localStorage.getItem('token');
+            const errorDiv = document.getElementById('apiManagementError');
+            const successDiv = document.getElementById('apiManagementSuccess');
+            
+            try {
+                const response = await fetch(`${API_CONFIG.baseUrl}/api/settings`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to load API configurations');
+                }
+
+                const settings = await response.json();
+                
+                // Populate LinkedIn form
+                const linkedinForm = document.getElementById('linkedinApiForm');
+                linkedinForm.querySelector('[name="linkedinClientId"]').value = settings.linkedin?.clientId || '';
+                linkedinForm.querySelector('[name="linkedinClientSecret"]').value = settings.linkedin?.clientSecret || '';
+                linkedinForm.querySelector('[name="linkedinRedirectUri"]').value = settings.linkedin?.redirectUri || '';
+
+                // Populate OCC form
+                const occForm = document.getElementById('occApiForm');
+                occForm.querySelector('[name="occApiKey"]').value = settings.occ?.apiKey || '';
+                occForm.querySelector('[name="occApiSecret"]').value = settings.occ?.apiSecret || '';
+                occForm.querySelector('[name="occEnvironment"]').value = settings.occ?.environment || 'sandbox';
+
+                // Hide any error messages
+                errorDiv.classList.add('d-none');
+                successDiv.classList.add('d-none');
+            } catch (error) {
+                console.error('Error loading API configurations:', error);
+                errorDiv.textContent = error.message;
+                errorDiv.classList.remove('d-none');
+            }
+        }
+
+        // Add status refresh functionality
+        function startStatusRefresh() {
+            // Initial load
+            loadHRAccounts();
+            
+            // Refresh every 10 seconds for more real-time status updates
+            const refreshInterval = setInterval(async () => {
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    // If token is gone (logged out), clear the interval
+                    clearInterval(refreshInterval);
+                    return;
+                }
+                await loadHRAccounts();
+            }, 10000);
+        }
+    </script>
+</body>
+</html>

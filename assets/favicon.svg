@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Main circle -->
+    <circle cx="16" cy="16" r="14" fill="#232F3E"/>
+    
+    <!-- Top arc -->
+    <path d="M2 16C2 8.26801 8.26801 2 16 2C23.732 2 30 8.26801 30 16" stroke="#F45B4E" stroke-width="4"/>
+    
+    <!-- Smile line -->
+    <path d="M9 18C9 18 12.5 21 16 21C19.5 21 23 18 23 18" stroke="white" stroke-width="2" stroke-linecap="round"/>
+    
+    <!-- Dots -->
+    <circle cx="30" cy="16" r="2" fill="#F45B4E"/>
+    <circle cx="2" cy="16" r="2" fill="#F45B4E"/>
+    <circle cx="16" cy="30" r="2" fill="#232F3E"/>
+</svg> 

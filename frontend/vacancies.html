@@ -1,0 +1,2368 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STRAFOR.AI HR Portal - Vacancies</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body {
+            font-family: 'Poppins', 'Inter', system-ui, sans-serif;
+            background: linear-gradient(120deg, #f8e1e7 0%, #e3f0ff 100%);
+            min-height: 100vh;
+        }
+        .index-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 2rem 0;
+        }
+        .sidebar {
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(26,42,56,0.10);
+            padding: 2rem 1rem 1rem 1rem;
+            margin-right: 2.5rem;
+            min-width: 220px;
+            max-width: 250px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: fit-content;
+        }
+        .sidebar-logo img {
+            max-width: 120px;
+            margin-bottom: 2rem;
+        }
+        .sidebar-nav {
+            width: 100%;
+        }
+        .sidebar-nav a {
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #333;
+            transition: background 0.2s, color 0.2s;
+            padding: 0.75rem 1rem;
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        .sidebar-nav a.active, .sidebar-nav a:hover {
+            background: #e91e63;
+            color: #fff;
+        }
+        .sidebar-nav i {
+            margin-right: 0.75rem;
+            font-size: 1.25rem;
+        }
+        /* Dark mode */
+        [data-theme="dark"] body {
+            background: linear-gradient(135deg, #23242a 0%, #2d2e36 100%);
+        }
+        [data-theme="dark"] .sidebar {
+            background: rgba(30,32,38,0.95);
+            color: #fff;
+            box-shadow: 0 4px 24px rgba(233,30,99,0.10);
+        }
+        [data-theme="dark"] .sidebar-nav a {
+            color: #eee;
+        }
+        [data-theme="dark"] .sidebar-nav a.active,
+        [data-theme="dark"] .sidebar-nav a:hover {
+            background: #e91e63;
+            color: #fff;
+        }
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .index-wrapper {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .sidebar {
+                margin: 0 auto 2rem auto;
+            }
+        }
+        @media (max-width: 900px) {
+            .index-wrapper {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 1rem 0;
+            }
+            .sidebar {
+                margin: 0 auto 1rem auto;
+                min-width: 100%;
+                max-width: 100%;
+                border-radius: 16px;
+                padding: 1.5rem 0.5rem;
+            }
+        }
+        @media (max-width: 600px) {
+            .sidebar {
+                padding: 1rem 0.25rem;
+                border-radius: 10px;
+            }
+        }
+        /* Carousel Control Buttons */
+        .carousel-control-prev,
+        .carousel-control-next {
+            width: 40px;
+            height: 40px;
+            background: rgba(233, 30, 99, 0.9);
+            border-radius: 50%;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0.9;
+            transition: all 0.3s ease;
+        }
+
+        .carousel-control-prev:hover,
+        .carousel-control-next:hover {
+            background: #e91e63;
+            opacity: 1;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .carousel-control-prev {
+            left: -20px;
+        }
+
+        .carousel-control-next {
+            right: -20px;
+        }
+
+        .carousel-control-prev-icon,
+        .carousel-control-next-icon {
+            width: 20px;
+            height: 20px;
+            filter: brightness(0) invert(1);
+        }
+
+        /* Dark mode adjustments */
+        [data-theme="dark"] .carousel-control-prev,
+        [data-theme="dark"] .carousel-control-next {
+            background: rgba(233, 30, 99, 0.95);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        [data-theme="dark"] .carousel-control-prev:hover,
+        [data-theme="dark"] .carousel-control-next:hover {
+            background: #ff4081;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .carousel-control-prev,
+            .carousel-control-next {
+                width: 36px;
+                height: 36px;
+            }
+
+            .carousel-control-prev {
+                left: -10px;
+            }
+
+            .carousel-control-next {
+                right: -10px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .carousel-control-prev,
+            .carousel-control-next {
+                width: 32px;
+                height: 32px;
+            }
+
+            .carousel-control-prev-icon,
+            .carousel-control-next-icon {
+                width: 16px;
+                height: 16px;
+            }
+        }
+
+        /* Vacancy Card Styles */
+        .vacancy-card-modern {
+            background: var(--bg-section);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin: 0 auto;
+            max-width: 800px;
+            min-height: 600px; /* Fixed minimum height */
+            position: relative;
+            overflow: hidden;
+        }
+
+        .vacancy-card-modern .card-body {
+            padding: 2rem;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .vacancy-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .vacancy-meta {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .vacancy-meta span {
+            display: flex;
+            align-items: center;
+        }
+
+        .vacancy-meta i {
+            margin-right: 0.5rem;
+            color: var(--accent-color);
+        }
+
+        .section-header {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+        }
+
+        .description-text {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .badge-skill,
+        .badge-benefit {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .badge-skill {
+            background: rgba(233, 30, 99, 0.1);
+            color: var(--accent-color);
+        }
+
+        .badge-benefit {
+            background: rgba(25, 135, 84, 0.1);
+            color: var(--success-color);
+        }
+
+        .badge-remote {
+            background: rgba(13, 110, 253, 0.1);
+            color: #0d6efd;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* Dark mode adjustments */
+        [data-theme="dark"] .vacancy-card-modern {
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        [data-theme="dark"] .badge-skill {
+            background: rgba(233, 30, 99, 0.2);
+        }
+
+        [data-theme="dark"] .badge-benefit {
+            background: rgba(25, 135, 84, 0.2);
+        }
+
+        [data-theme="dark"] .badge-remote {
+            background: rgba(13, 110, 253, 0.2);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .vacancy-card-modern {
+                min-height: 500px;
+            }
+
+            .vacancy-title {
+                font-size: 1.5rem;
+            }
+
+            .vacancy-meta {
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .vacancy-card-modern {
+                min-height: 450px;
+            }
+
+            .vacancy-card-modern .card-body {
+                padding: 1.5rem;
+            }
+
+            .vacancy-title {
+                font-size: 1.25rem;
+            }
+
+            .section-header {
+                font-size: 1rem;
+            }
+        }
+
+        /* Main Content Container */
+        .main-content {
+            background: rgba(255,255,255,0.98);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(26,42,56,0.10);
+            padding: 2rem;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .main-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #e91e63, #ff4081);
+            opacity: 0.8;
+        }
+
+        /* Dark mode adjustments */
+        [data-theme="dark"] .main-content {
+            background: rgba(30,32,38,0.98);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        [data-theme="dark"] .main-content::before {
+            background: linear-gradient(90deg, #ff4081, #e91e63);
+        }
+
+        /* Section Title */
+        .section-title {
+            color: var(--text-primary);
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: var(--accent-color);
+            border-radius: 3px;
+        }
+
+        /* Card Styles */
+        .tm-card, .vacancy-card-modern {
+            background: rgba(255,255,255,0.98);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(26,42,56,0.10);
+            border: 1px solid rgba(0,0,0,0.05);
+            margin-bottom: 1.5rem;
+        }
+
+        .tm-card .card-header, .vacancy-card-modern .card-body {
+            padding: 1.5rem;
+        }
+
+        /* Dark mode card adjustments */
+        [data-theme="dark"] .tm-card,
+        [data-theme="dark"] .vacancy-card-modern {
+            background: rgba(30,32,38,0.98);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        [data-theme="dark"] .tm-card .card-header,
+        [data-theme="dark"] .vacancy-card-modern .card-body {
+            background: rgba(45, 47, 53, 0.6);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 1200px) {
+            .main-content {
+                margin: 0 1rem;
+                padding: 1.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                margin: 0 0.5rem;
+                padding: 1.25rem;
+                border-radius: 16px;
+            }
+
+            .section-title {
+                font-size: 1.75rem;
+            }
+
+            .tm-card, .vacancy-card-modern {
+                border-radius: 12px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .main-content {
+                margin: 0;
+                padding: 1rem;
+                border-radius: 12px;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+
+            .tm-card .card-header, .vacancy-card-modern .card-body {
+                padding: 0.75rem 1rem;
+            }
+
+            .tm-card .card-body, .vacancy-card-modern .card-body {
+                padding: 1rem;
+            }
+        }
+
+        /* Candidate View Buttons */
+        .btn-modern-primary,
+        .btn-modern-success {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-modern-primary {
+            background: linear-gradient(135deg, #4a6cf7, #2541b2);
+            color: white;
+            box-shadow: 0 4px 12px rgba(74, 108, 247, 0.2);
+        }
+
+        .btn-modern-primary:hover {
+            background: linear-gradient(135deg, #2541b2, #4a6cf7);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(74, 108, 247, 0.3);
+        }
+
+        .btn-modern-success {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+        }
+
+        .btn-modern-success:hover {
+            background: linear-gradient(135deg, #059669, #10b981);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3);
+        }
+
+        /* Dark mode adjustments */
+        [data-theme="dark"] .btn-modern-primary {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        [data-theme="dark"] .btn-modern-primary:hover {
+            background: linear-gradient(135deg, #1d4ed8, #3b82f6);
+            box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+        }
+
+        [data-theme="dark"] .btn-modern-success {
+            background: linear-gradient(135deg, #34d399, #059669);
+            box-shadow: 0 4px 12px rgba(52, 211, 153, 0.3);
+        }
+
+        [data-theme="dark"] .btn-modern-success:hover {
+            background: linear-gradient(135deg, #059669, #34d399);
+            box-shadow: 0 6px 16px rgba(52, 211, 153, 0.4);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .btn-modern-primary,
+            .btn-modern-success {
+                padding: 0.6rem 1.25rem;
+                font-size: 0.95rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .btn-modern-primary,
+            .btn-modern-success {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Improved Candidate Table Contrast for Dark Mode */
+        [data-theme="dark"] .table {
+            background-color: transparent;
+            color: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+        }
+        [data-theme="dark"] .table th {
+            background-color: #23242a;
+            color: #fff;
+            font-weight: 700;
+            border-bottom: 1px solid rgba(255,255,255,0.10);
+        }
+        [data-theme="dark"] .table td {
+            background-color: #23242a;
+            color: #fff;
+            border-bottom: 1px solid rgba(255,255,255,0.07);
+        }
+        [data-theme="dark"] .table tr:nth-child(even) td {
+            background-color: #282a30;
+        }
+        [data-theme="dark"] .table tr:hover td {
+            background-color: #31333a;
+        }
+        [data-theme="dark"] .search-input {
+            background: #23242a;
+            color: #fff;
+            border: 1px solid #444;
+        }
+        [data-theme="dark"] .search-input::placeholder {
+            color: #bbb;
+        }
+        [data-theme="dark"] .tm-card {
+            background: #18191c !important;
+            border-color: rgba(255,255,255,0.07) !important;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+        }
+        [data-theme="dark"] .table,
+        [data-theme="dark"] .table th,
+        [data-theme="dark"] .table td {
+            border-color: rgba(255,255,255,0.07) !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="index-wrapper">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-logo">
+                <img src="assets/ChatGPT-Image-3-may-2025_-00_45_24.svg" alt="STRAFOR.AI Logo">
+            </div>
+            <ul class="sidebar-nav">
+                <li><a href="index.html"><i class="bi bi-speedometer2"></i>Dashboard</a></li>
+                <li><a href="vacancies.html" class="active"><i class="bi bi-briefcase"></i>Vacancies</a></li>
+                <li><a href="settings.html"><i class="bi bi-gear"></i>Settings</a></li>
+                <li><a href="#" onclick="logout()"><i class="bi bi-box-arrow-right"></i>Logout</a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="section-title">Job Vacancies</h1>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-primary" id="toggleVacancyForm">
+                        <i class="bi bi-plus-circle me-2"></i>Post New Vacancy
+                    </button>
+                    <button class="btn btn-success" id="toggleCandidateForm">
+                        <i class="bi bi-person-plus me-2"></i>Register New Candidate
+                    </button>
+                </div>
+            </div>
+
+            <!-- Vacancy Form -->
+            <div class="tm-card mb-4" id="vacancyForm" style="display: none;">
+                <div class="card-header">
+                    <h5>
+                        <i class="bi bi-pencil-square me-2"></i>
+                        Post New Vacancy
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form id="newVacancyForm">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Job Title</label>
+                                <input type="text" class="form-control" name="title" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Department</label>
+                                <input type="text" class="form-control" name="department" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Country</label>
+                                <select class="form-select" name="country" required onchange="loadStates(this.value, 'vacancy')">
+                                    <option value="">Select Country</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">City</label>
+                                <select class="form-select" name="city" required>
+                                    <option value="">Select City</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Employment Type</label>
+                                <select class="form-select" name="employmentType" required>
+                                    <option value="">Select type</option>
+                                    <option value="Full-time">Full-time</option>
+                                    <option value="Part-time">Part-time</option>
+                                    <option value="Contract">Contract</option>
+                                    <option value="Temporary">Temporary</option>
+                                    <option value="Internship">Internship</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Job Description</label>
+                            <textarea class="form-control" name="description" rows="4" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Requirements</label>
+                            <textarea class="form-control" name="requirements" rows="4" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Responsibilities</label>
+                            <textarea class="form-control" name="responsibilities" rows="4" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Required Skills (comma-separated)</label>
+                            <input type="text" class="form-control" name="skills" required>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Experience Level</label>
+                                <select class="form-select" name="experienceLevel" required>
+                                    <option value="">Select level</option>
+                                    <option value="Entry Level">Entry Level</option>
+                                    <option value="Mid Level">Mid Level</option>
+                                    <option value="Senior Level">Senior Level</option>
+                                    <option value="Executive">Executive</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Salary Range</label>
+                                <div class="input-group salary-range">
+                                    <select class="form-select" name="currency" style="max-width: 120px;" required>
+                                        <option value="USD">USD ($)</option>
+                                        <option value="EUR">EUR (€)</option>
+                                        <option value="GBP">GBP (£)</option>
+                                        <option value="JPY">JPY (¥)</option>
+                                        <option value="AUD">AUD (A$)</option>
+                                        <option value="CAD">CAD (C$)</option>
+                                        <option value="CHF">CHF (Fr)</option>
+                                        <option value="CNY">CNY (¥)</option>
+                                        <option value="HKD">HKD (HK$)</option>
+                                        <option value="NZD">NZD (NZ$)</option>
+                                        <option value="SEK">SEK (kr)</option>
+                                        <option value="KRW">KRW (₩)</option>
+                                        <option value="SGD">SGD (S$)</option>
+                                        <option value="NOK">NOK (kr)</option>
+                                        <option value="MXN">MXN ($)</option>
+                                        <option value="INR">INR (₹)</option>
+                                        <option value="RUB">RUB (₽)</option>
+                                        <option value="ZAR">ZAR (R)</option>
+                                        <option value="TRY">TRY (₺)</option>
+                                        <option value="BRL">BRL (R$)</option>
+                                        <option value="TWD">TWD (NT$)</option>
+                                        <option value="DKK">DKK (kr)</option>
+                                        <option value="PLN">PLN (zł)</option>
+                                        <option value="THB">THB (฿)</option>
+                                        <option value="IDR">IDR (Rp)</option>
+                                        <option value="HUF">HUF (Ft)</option>
+                                        <option value="CZK">CZK (Kč)</option>
+                                        <option value="ILS">ILS (₪)</option>
+                                        <option value="CLP">CLP ($)</option>
+                                        <option value="PHP">PHP (₱)</option>
+                                        <option value="AED">AED (د.إ)</option>
+                                        <option value="COP">COP ($)</option>
+                                        <option value="SAR">SAR (﷼)</option>
+                                        <option value="MYR">MYR (RM)</option>
+                                        <option value="RON">RON (lei)</option>
+                                    </select>
+                                    <input type="number" class="form-control" name="salaryMin" placeholder="Min" required>
+                                    <span class="input-group-text">-</span>
+                                    <input type="number" class="form-control" name="salaryMax" placeholder="Max" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Benefits (comma-separated)</label>
+                            <input type="text" class="form-control" name="benefits">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Application Deadline</label>
+                                <input type="date" class="form-control" name="deadline" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="form-check mt-4">
+                                    <input type="checkbox" class="form-check-input" name="remoteWork" id="remoteWork">
+                                    <label class="form-check-label" for="remoteWork">Remote Work Available</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" name="postToLinkedIn" id="postToLinkedIn">
+                                <label class="form-check-label" for="postToLinkedIn">Post to LinkedIn</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" name="postToOCC" id="postToOCC">
+                                <label class="form-check-label" for="postToOCC">Post to OCC Mundial</label>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-send me-2"></i>Post Vacancy
+                            </button>
+                            <button type="button" class="btn btn-secondary" id="cancelVacancyForm">
+                                <i class="bi bi-x-circle me-2"></i>Cancel
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Vacancies List -->
+            <div class="tm-card">
+                <div class="card-header">
+                    <h5>
+                        <i class="bi bi-list-ul me-2"></i>
+                        Active Vacancies
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div id="vacanciesCarousel" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-indicators" id="vacancyIndicators">
+                            <!-- Indicators will be added dynamically -->
+                        </div>
+                        <div class="carousel-inner" id="vacanciesList">
+                            <!-- Vacancies will be loaded here dynamically -->
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#vacanciesCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#vacanciesCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Candidates Modal -->
+    <div class="modal fade" id="candidatesModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Candidates for <span id="vacancyTitle"></span></h5>
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-warning position-relative" onclick="showPendingFeedbacks()" title="Feedback Notifications">
+                            <i class="bi bi-bell-fill"></i>
+                            <span id="feedbackBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                0
+                            </span>
+                        </button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <div class="search-container">
+                            <i class="bi bi-search search-icon"></i>
+                            <input type="text" class="form-control search-input" id="candidateSearch" placeholder="Search by name or skills...">
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Experience</th>
+                                    <th>Skills</th>
+                                    <th>Contact Information</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="vacancyCandidatesList">
+                                <!-- Candidates will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Candidate Details Modal -->
+    <div class="modal fade" id="candidateDetailsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Candidate Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="candidate-details-modern card p-4 shadow-sm border-0">
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <div class="candidate-section mb-3">
+                                    <h6 class="section-header mb-3 text-uppercase text-secondary fw-bold" style="letter-spacing:1px;">Personal Information</h6>
+                                    <p class="mb-2"><strong>Name:</strong> <span id="candidateFullName"></span></p>
+                                    <p class="mb-2"><strong>Email:</strong> <span id="candidateEmail"></span></p>
+                                    <p class="mb-2"><strong>Phone:</strong> <span id="candidatePhone"></span></p>
+                                    <p class="mb-2"><strong>Location:</strong> <span id="candidateLocation"></span></p>
+                                    <p class="mb-2"><strong>LinkedIn:</strong> <span id="candidateLinkedIn"></span></p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="candidate-section mb-3">
+                                    <h6 class="section-header mb-3 text-uppercase text-secondary fw-bold" style="letter-spacing:1px;">Professional Information</h6>
+                                    <p class="mb-2"><strong>Current Position:</strong> <span id="candidatePosition"></span></p>
+                                    <p class="mb-2"><strong>Experience:</strong> <span id="candidateExperience"></span></p>
+                                    <p class="mb-2"><strong>Education:</strong> <span id="candidateEducation"></span></p>
+                                    <p class="mb-2"><strong>Skills:</strong> <span id="candidateSkills"></span></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <div class="candidate-section mt-2 pt-3 border-top">
+                                    <h6 class="section-header mb-3 text-uppercase text-secondary fw-bold" style="letter-spacing:1px;">Additional Information</h6>
+                                    <p class="mb-2"><strong>Status:</strong> <span id="candidateStatus"></span></p>
+                                    <p class="mb-2"><strong>Match Score:</strong> <span id="candidateMatchScore"></span></p>
+                                    <div id="candidateResumeLink" class="mt-3"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hiring Feedback Modal -->
+    <div class="modal fade" id="hiringFeedbackModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content feedback-modal">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="bi bi-cpu me-2"></i>
+                        AI Hiring Assistant
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="ai-container">
+                        <div class="ai-icon">
+                            <i class="bi bi-robot"></i>
+                        </div>
+                        <p id="hiringFeedbackLabel" class="mb-3 feedback-question"></p>
+                    </div>
+                    <div class="form-group">
+                        <textarea 
+                            class="form-control feedback-textarea" 
+                            id="hiringFeedbackInput" 
+                            rows="5"
+                            placeholder="Share your insights here..."
+                            style="pointer-events: auto !important; user-select: text !important;"
+                        ></textarea>
+                    </div>
+                    <input type="hidden" id="feedbackCandidateId">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle me-2"></i>Cancel
+                    </button>
+                    <button type="button" class="btn-ai" onclick="submitHiringFeedback()">
+                        <i class="bi bi-lightning me-2"></i>Process Feedback
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Candidate Registration Modal -->
+    <div class="modal fade" id="candidateFormModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-person-plus me-2"></i>Register New Candidate</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="newCandidateForm">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">First Name</label>
+                                <input type="text" class="form-control" name="first_name" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Last Name</label>
+                                <input type="text" class="form-control" name="last_name" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-control" name="email" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Phone</label>
+                                <input type="text" class="form-control" name="phone" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Country</label>
+                                <input type="text" class="form-control" name="country" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">City</label>
+                                <input type="text" class="form-control" name="city" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Education</label>
+                                <input type="text" class="form-control" name="education" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Current Position</label>
+                                <input type="text" class="form-control" name="current_position">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Experience (Years)</label>
+                                <input type="number" class="form-control" name="experience" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Skills (comma-separated)</label>
+                                <input type="text" class="form-control" name="skills" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Vacancy</label>
+                            <select class="form-select" name="applied_for" id="candidateVacancySelect" required>
+                                <option value="">Select Vacancy</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Notes</label>
+                            <textarea class="form-control" name="notes" rows="2"></textarea>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-save me-2"></i>Save Candidate
+                            </button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                <i class="bi bi-x-circle me-2"></i>Cancel
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/theme-manager.js"></script>
+    <script>
+        // API Base URL - Fixed configuration
+        const API_BASE_URL = 'http://localhost:3000';  // Since we're running the server locally
+
+        // Helper function for making API requests
+        async function makeAPIRequest(endpoint, options = {}) {
+            const defaultOptions = {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include',  // Include cookies if any
+                mode: 'cors'  // Enable CORS
+            };
+
+            const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+                ...defaultOptions,
+                ...options
+            });
+
+            // Check if we received HTML instead of JSON
+            const contentType = response.headers.get('content-type');
+            if (contentType && contentType.includes('text/html')) {
+                throw new Error('Received HTML response instead of JSON. Please check if the API server is running and configured correctly.');
+            }
+
+            if (!response.ok) {
+                if (response.status === 404) {
+                    throw new Error('Endpoint not found. Please check if the API server is running at the correct URL.');
+                }
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.message || `Server returned ${response.status}: ${response.statusText}`);
+            }
+
+            return response.json();
+        }
+
+        // Toggle vacancy form
+        document.getElementById('toggleVacancyForm').addEventListener('click', () => {
+            const form = document.getElementById('vacancyForm');
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        });
+
+        document.getElementById('cancelVacancyForm').addEventListener('click', () => {
+            document.getElementById('vacancyForm').style.display = 'none';
+            document.getElementById('newVacancyForm').reset();
+        });
+
+        // Load countries for the form
+        async function loadCountries() {
+            const countrySelect = document.querySelector('#newVacancyForm select[name="country"]');
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/countries`);
+                if (!response.ok) {
+                    throw new Error('Failed to load countries list');
+                }
+                
+                const countries = await response.json();
+                
+                // Clear existing options except the placeholder
+                countrySelect.innerHTML = '<option value="">Select Country</option>';
+                
+                // Sort countries alphabetically
+                countries.forEach(country => {
+                    const option = document.createElement('option');
+                    option.value = country;
+                    option.textContent = country;
+                    countrySelect.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error loading countries:', error);
+                alert('Error loading countries list. Please try refreshing the page.');
+            }
+        }
+
+        // Load states based on selected country
+        async function loadStates(country, formType) {
+            const citySelect = document.querySelector(`#${formType === 'vacancy' ? 'newVacancyForm' : 'newCandidateForm'} select[name="city"]`);
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/countries/${country}/states`);
+                if (!response.ok) {
+                    throw new Error('Failed to load states list');
+                }
+                
+                const states = await response.json();
+                
+                // Clear existing options except the placeholder
+                citySelect.innerHTML = '<option value="">Select City</option>';
+                
+                // Sort states alphabetically
+                states.forEach(state => {
+                    const option = document.createElement('option');
+                    option.value = state;
+                    option.textContent = state;
+                    citySelect.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error loading states:', error);
+                alert('Error loading states list. Please try again.');
+            }
+        }
+
+        // Load countries when the page loads
+        document.addEventListener('DOMContentLoaded', loadCountries);
+
+        // Modify the form submission to handle the new location format
+        document.getElementById('newVacancyForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            
+            // Combine country and city into location string
+            const country = formData.get('country');
+            const city = formData.get('city');
+            const location = `${city} - ${country}`;
+            
+            const vacancy = {
+                title: formData.get('title'),
+                department: formData.get('department'),
+                location: location,
+                type: formData.get('employmentType'),
+                description: formData.get('description'),
+                requirements: formData.get('requirements'),
+                responsibilities: formData.get('responsibilities'),
+                skills_required: formData.get('skills').split(',').map(skill => skill.trim()),
+                experience_level: formData.get('experienceLevel'),
+                salary_range: {
+                    min: parseInt(formData.get('salaryMin')),
+                    max: parseInt(formData.get('salaryMax')),
+                    currency: formData.get('currency')
+                },
+                benefits: formData.get('benefits') ? formData.get('benefits').split(',').map(benefit => benefit.trim()) : [],
+                application_deadline: formData.get('deadline'),
+                remote_option: formData.get('remoteWork') === 'on',
+                external_postings: {
+                    linkedin: formData.get('postToLinkedIn') === 'on',
+                    occ: formData.get('postToOCC') === 'on'
+                }
+            };
+
+            try {
+                console.log('Submitting vacancy data:', vacancy); // Debug log
+
+                const response = await fetch(`${API_BASE_URL}/api/vacancies`, {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(vacancy)
+                });
+
+                const responseData = await response.json();
+                console.log('Server response:', responseData); // Debug log
+
+                if (!response.ok) {
+                    let errorMessage = 'Failed to post vacancy';
+                    if (responseData.error) {
+                        errorMessage += `: ${responseData.error}`;
+                        if (responseData.fields) {
+                            errorMessage += `\nMissing fields: ${responseData.fields.join(', ')}`;
+                        }
+                        if (responseData.details) {
+                            errorMessage += `\nDetails: ${responseData.details}`;
+                        }
+                    }
+                    throw new Error(errorMessage);
+                }
+
+                alert('Vacancy posted successfully!');
+                document.getElementById('vacancyForm').style.display = 'none';
+                document.getElementById('newVacancyForm').reset();
+                loadVacancies();
+            } catch (error) {
+                console.error('Error:', error);
+                alert(error.message || 'Error posting vacancy');
+            }
+        });
+
+        // Load and display vacancies
+        let lastLoadTime = 0;
+        const LOAD_INTERVAL = 5000; // 5 seconds minimum between loads
+
+        async function loadVacancies() {
+            const now = Date.now();
+            if (now - lastLoadTime < LOAD_INTERVAL) {
+                console.log('Skipping load - too soon since last load');
+                return;
+            }
+            lastLoadTime = now;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/vacancies`);
+                if (response.ok) {
+                    const vacancies = await response.json();
+                    const vacanciesList = document.getElementById('vacanciesList');
+                    const vacancyIndicators = document.getElementById('vacancyIndicators');
+                    vacanciesList.innerHTML = '';
+                    vacancyIndicators.innerHTML = '';
+                    
+                    vacancies.forEach((vacancy, index) => {
+                        // Add indicator
+                        const indicator = document.createElement('button');
+                        indicator.type = 'button';
+                        indicator.setAttribute('data-bs-target', '#vacanciesCarousel');
+                        indicator.setAttribute('data-bs-slide-to', index.toString());
+                        if (index === 0) indicator.classList.add('active');
+                        vacancyIndicators.appendChild(indicator);
+
+                        // Add carousel item
+                        const card = document.createElement('div');
+                        card.className = `carousel-item ${index === 0 ? 'active' : ''}`;
+                        card.innerHTML = `
+                            <div class="vacancy-card-modern mx-auto">
+                                <button class="btn btn-danger btn-sm position-absolute top-0 end-0 m-2 shadow-sm" 
+                                        onclick="deleteVacancy('${vacancy._id || vacancy.id}')"
+                                        style="z-index: 1;">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                                <div class="card-body p-4">
+                                    <h2 class="vacancy-title mb-2">${vacancy.title}</h2>
+                                    <div class="vacancy-meta mb-3">
+                                        <span><i class="bi bi-building me-1"></i>${vacancy.department}</span>
+                                        <span class="mx-2">|</span>
+                                        <span><i class="bi bi-geo-alt me-1"></i>${vacancy.location}</span>
+                                        <span class="mx-2">|</span>
+                                        <span><i class="bi bi-clock me-1"></i>${vacancy.type || vacancy.employmentType}</span>
+                                        <span class="mx-2">|</span>
+                                        <span><i class="bi bi-briefcase me-1"></i>${vacancy.experience_level || vacancy.experienceLevel}</span>
+                                    </div>
+                                    <div class="vacancy-meta mb-3">
+                                        ${vacancy.salary ? `<span class='me-3'><i class='bi bi-currency-dollar me-1'></i>${getCurrencySymbol(vacancy.salary.currency)}${vacancy.salary.min.toLocaleString()} - ${getCurrencySymbol(vacancy.salary.currency)}${vacancy.salary.max.toLocaleString()}</span>` : ''}
+                                        ${vacancy.remote_option ? '<span class="badge badge-remote ms-1"><i class="bi bi-laptop"></i> Remote</span>' : ''}
+                                        ${vacancy.application_deadline ? `<span class='ms-3'><i class='bi bi-calendar me-1'></i>${new Date(vacancy.application_deadline).toLocaleDateString()}</span>` : ''}
+                                    </div>
+                                    <hr class="my-3">
+                                    ${vacancy.description ? `
+                                        <div class="mb-3">
+                                            <h6 class="section-header">Description</h6>
+                                            <p class="description-text">${vacancy.description}</p>
+                                        </div>
+                                    ` : ''}
+                                    ${vacancy.responsibilities ? `
+                                        <div class="mb-3">
+                                            <h6 class="section-header">Responsibilities</h6>
+                                            <p class="description-text">${vacancy.responsibilities}</p>
+                                        </div>
+                                    ` : ''}
+                                    ${vacancy.requirements ? `
+                                        <div class="mb-3">
+                                            <h6 class="section-header">Requirements</h6>
+                                            <p class="description-text">${vacancy.requirements}</p>
+                                        </div>
+                                    ` : ''}
+                                    ${(vacancy.skills_required || vacancy.skills) ? `
+                                        <div class="mb-3">
+                                            <h6 class="section-header">Required Skills</h6>
+                                            <div class="d-flex flex-wrap gap-2">
+                                                ${(vacancy.skills_required || vacancy.skills).map(skill => 
+                                                    `<span class="badge badge-skill">${skill}</span>`
+                                                ).join('')}
+                                            </div>
+                                        </div>
+                                    ` : ''}
+                                    ${vacancy.benefits && vacancy.benefits.length > 0 ? `
+                                        <div class="mb-3">
+                                            <h6 class="section-header">Benefits</h6>
+                                            <div class="d-flex flex-wrap gap-2">
+                                                ${vacancy.benefits.map(benefit => 
+                                                    `<span class="badge badge-benefit">${benefit}</span>`
+                                                ).join('')}
+                                            </div>
+                                        </div>
+                                    ` : ''}
+                                    <div class="mt-4 d-flex gap-3">
+                                        <button class="btn btn-modern-primary flex-grow-1" onclick="viewCandidates('${vacancy._id || vacancy.id}', '${vacancy.title}')">
+                                            <i class="bi bi-people"></i> View Candidates
+                                        </button>
+                                        <button class="btn btn-modern-success flex-grow-1" onclick="viewTopCandidates('${vacancy._id || vacancy.id}', '${vacancy.title}')">
+                                            <i class="bi bi-star"></i> Top Candidates
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        vacanciesList.appendChild(card);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading vacancies:', error);
+            }
+        }
+
+        // Add variables to track current vacancy and its candidates
+        let currentVacancyId = null;
+        let currentVacancyCandidates = [];
+        let candidatesModal = null;
+        let hiringFeedbackModal = null;
+
+        // Add variable to track current view
+        let isTopCandidatesView = false;
+
+        // Initialize modals when the document is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize candidates modal
+            const candidatesModalElement = document.getElementById('candidatesModal');
+            candidatesModal = new bootstrap.Modal(candidatesModalElement, {
+                backdrop: true,
+                keyboard: true
+            });
+
+            // Initialize hiring feedback modal
+            const hiringFeedbackModalElement = document.getElementById('hiringFeedbackModal');
+            hiringFeedbackModal = new bootstrap.Modal(hiringFeedbackModalElement, {
+                backdrop: 'static',
+                keyboard: false
+            });
+
+            const textarea = document.getElementById('hiringFeedbackInput');
+            
+            // Handle modal shown event
+            hiringFeedbackModalElement.addEventListener('shown.bs.modal', function () {
+                // Force enable the textarea
+                textarea.disabled = false;
+                textarea.readOnly = false;
+                textarea.style.pointerEvents = 'auto';
+                textarea.style.userSelect = 'text';
+                
+                // Clear any existing value
+                textarea.value = '';
+                
+                // Focus the textarea
+                setTimeout(() => {
+                    textarea.focus();
+                }, 100);
+            });
+
+            // Handle modal hidden event
+            hiringFeedbackModalElement.addEventListener('hidden.bs.modal', function () {
+                // Clear the textarea when modal is closed
+                textarea.value = '';
+            });
+
+            // Store modal instances globally
+            window.candidatesModal = candidatesModal;
+            window.hiringFeedbackModal = hiringFeedbackModal;
+        });
+
+        // Modify viewCandidates function to remove automatic feedback check
+        async function viewCandidates(vacancyId, title) {
+            try {
+                isTopCandidatesView = false;
+                currentVacancyId = vacancyId;
+                const response = await fetch(`${API_BASE_URL}/api/vacancies/${vacancyId}/candidates`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch candidates');
+                }
+                const candidates = await response.json();
+                currentVacancyCandidates = candidates;
+                const candidatesList = document.getElementById('vacancyCandidatesList');
+                document.getElementById('vacancyTitle').textContent = title;
+                
+                window.currentCandidates = candidates;
+                
+                document.getElementById('candidateSearch').addEventListener('input', (e) => {
+                    filterCandidates(e.target.value);
+                });
+                
+                displayCandidates(candidates);
+                
+                // Use the stored modal instance
+                window.candidatesModal.show();
+            } catch (error) {
+                console.error('Error loading candidates:', error);
+                alert('Error loading candidates. Please check the console for details.');
+            }
+        }
+
+        // Function to filter candidates
+        function filterCandidates(searchTerm) {
+            if (!window.currentCandidates) return;
+            
+            const filteredCandidates = window.currentCandidates.filter(candidate => {
+                const searchLower = searchTerm.toLowerCase();
+                const fullName = `${candidate.first_name} ${candidate.last_name}`.toLowerCase();
+                const skills = candidate.skills.toLowerCase();
+                
+                return fullName.includes(searchLower) || skills.includes(searchLower);
+            });
+            
+            displayCandidates(filteredCandidates);
+        }
+
+        // Function to display candidates
+        function displayCandidates(candidates) {
+            const candidatesList = document.getElementById('vacancyCandidatesList');
+            
+            if (candidates.length === 0) {
+                candidatesList.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="text-center">No candidates found matching your search.</td>
+                    </tr>
+                `;
+            } else {
+                candidatesList.innerHTML = candidates.map(candidate => `
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <button class="btn btn-link p-0 text-decoration-none" onclick="showCandidateDetails(${JSON.stringify(candidate).replace(/"/g, '&quot;')})">
+                                    ${candidate.first_name} ${candidate.last_name}
+                                </button>
+                                ${candidate.status === 'accepted' && !candidate.hiring_feedback ? 
+                                    '<span class="badge bg-warning" title="Feedback Pending"><i class="bi bi-exclamation-circle"></i></span>' : 
+                                    ''}
+                            </div>
+                        </td>
+                        <td>${candidate.experience} years</td>
+                        <td>${candidate.skills}</td>
+                        <td>${candidate.email || 'N/A'}</td>
+                        <td>
+                            <span class="badge bg-${getStatusColor(candidate.status)}">
+                                ${candidate.status}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-sm btn-outline-primary" onclick="sendInterviewEmail('${candidate._id}', '${candidate.first_name}', '${candidate.last_name}', '${candidate.email}')">
+                                    Interview
+                                </button>
+                                <button class="btn btn-sm btn-outline-success" onclick="hireCandidate('${candidate._id}', '${candidate.first_name}', '${candidate.last_name}', '${candidate.email}')">
+                                    Accept
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger" onclick="rejectCandidate('${candidate._id}', '${candidate.first_name}', '${candidate.last_name}', '${candidate.email}')">
+                                    Reject
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+            
+            // Update the feedback badge count
+            updateFeedbackBadge();
+        }
+
+        // Function to show candidate details
+        function showCandidateDetails(candidate) {
+            const modal = new bootstrap.Modal(document.getElementById('candidateDetailsModal'));
+            
+            // Set the candidate information in the modal
+            document.getElementById('candidateFullName').textContent = `${candidate.first_name} ${candidate.last_name}`;
+            document.getElementById('candidateEmail').textContent = candidate.email || 'N/A';
+            document.getElementById('candidatePhone').textContent = candidate.phone || 'N/A';
+            document.getElementById('candidateLocation').textContent = `${candidate.city || 'N/A'}, ${candidate.country || 'N/A'}`;
+            
+            // Handle LinkedIn link
+            const linkedInContainer = document.getElementById('candidateLinkedIn');
+            if (candidate.linkedin) {
+                linkedInContainer.innerHTML = `
+                    <a href="${candidate.linkedin}" target="_blank" class="btn btn-outline-primary btn-sm">
+                        <i class="bi bi-linkedin"></i> View Profile
+                    </a>
+                `;
+            } else {
+                linkedInContainer.textContent = 'N/A';
+            }
+            
+            document.getElementById('candidatePosition').textContent = candidate.current_position || 'N/A';
+            document.getElementById('candidateExperience').textContent = `${candidate.experience} years`;
+            document.getElementById('candidateEducation').textContent = candidate.education || 'N/A';
+            document.getElementById('candidateSkills').textContent = candidate.skills || 'N/A';
+            document.getElementById('candidateStatus').textContent = candidate.status || 'N/A';
+            document.getElementById('candidateMatchScore').textContent =
+                candidate.match_score !== undefined && candidate.match_score !== null
+                    ? `${Math.round(candidate.match_score * 100)}%`
+                    : 'N/A';
+            
+            // Handle resume link
+            const resumeLinkContainer = document.getElementById('candidateResumeLink');
+            if (candidate.resume) {
+                resumeLinkContainer.innerHTML = `
+                    <a href="#" onclick="viewResume('${candidate.resume}')" class="btn btn-outline-primary btn-sm">
+                        <i class="bi bi-file-earmark-text"></i> View Resume
+                    </a>
+                `;
+            } else {
+                resumeLinkContainer.innerHTML = 'No resume available';
+            }
+            
+            modal.show();
+        }
+
+        // Function to send interview email
+        async function sendInterviewEmail(candidateId, firstName, lastName, email) {
+            const emailTemplate = `Dear ${firstName} ${lastName},
+
+We hope this email finds you well!
+
+Thank you for your interest in joining Tech Mahindra. We have reviewed your application and are impressed with your qualifications and experience. We would like to invite you for an interview with our HR Department to discuss potential opportunities that align with your skills.
+
+Interview Details:
+📅 Date: [Insert Date]
+🕒 Time: [Insert Time]
+📍 Location/Virtual Meeting Link: [Insert Address/Google Meet/Zoom Link]
+👥 Interviewer: [HR Representative's Name, if applicable]
+
+Please confirm your availability for the scheduled time or let us know if you require any adjustments. Should you have any questions or need further details, feel free to reach out to us at [HR Contact Email/Phone].
+
+We look forward to meeting you and exploring how you can contribute to Tech Mahindra's success.
+
+Best regards,
+[Your Full Name]
+[Your Designation]
+Tech Mahindra
+[Company Contact Information]`;
+
+            try {
+                // First update the candidate status
+                await updateCandidateStatus(candidateId, 'Interviewed');
+
+                // Then open email client with pre-filled template
+                const mailtoLink = `mailto:${email}?subject=Interview Invitation - Tech Mahindra&body=${encodeURIComponent(emailTemplate)}`;
+                window.location.href = mailtoLink;
+            } catch (error) {
+                console.error('Error sending interview email:', error);
+                alert('Failed to update candidate status. Please try again.');
+            }
+        }
+
+        // Function to reject candidate
+        async function rejectCandidate(candidateId, firstName, lastName, email) {
+            if (!confirm(`Are you sure you want to reject ${firstName} ${lastName}?`)) {
+                return;
+            }
+
+            try {
+                // Update candidate status
+                await updateCandidateStatus(candidateId, 'Rejected');
+
+                // Prepare rejection email
+                const emailTemplate = `Dear ${firstName} ${lastName},
+
+Thank you for your interest in Tech Mahindra and for taking the time to apply for the position.
+
+After careful consideration of your application, we regret to inform you that we have decided to move forward with other candidates whose qualifications more closely match our current needs.
+
+We appreciate your interest in Tech Mahindra and wish you the best in your future endeavors.
+
+Best regards,
+[Your Full Name]
+Tech Mahindra`;
+
+                // Open email client with pre-filled rejection template
+                const mailtoLink = `mailto:${email}?subject=Application Status - Tech Mahindra&body=${encodeURIComponent(emailTemplate)}`;
+                window.location.href = mailtoLink;
+            } catch (error) {
+                console.error('Error rejecting candidate:', error);
+                alert('Error updating candidate status. Please try again.');
+            }
+        }
+
+        // Modify checkAcceptedCandidatesFeedback to use currentVacancyCandidates
+        async function checkAcceptedCandidatesFeedback() {
+            try {
+                // Fetch fresh data from the server for the current vacancy
+                const response = await fetch(`${API_BASE_URL}/api/vacancies/${currentVacancyId}/candidates`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to fetch candidates');
+                }
+                
+                const candidates = await response.json();
+                const acceptedCandidates = candidates.filter(c => c.status === 'accepted');
+                const candidatesWithoutFeedback = acceptedCandidates.filter(c => !c.hiring_feedback);
+                return candidatesWithoutFeedback.length === 0;
+            } catch (error) {
+                console.error('Error checking feedback status:', error);
+                return false;
+            }
+        }
+
+        // Modify checkInitialFeedbackStatus to use the new modal
+        async function checkInitialFeedbackStatus() {
+            try {
+                // Fetch fresh data from the server
+                const response = await fetch(`${API_BASE_URL}/api/vacancies/${currentVacancyId}/candidates`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to fetch candidates');
+                }
+                
+                const candidates = await response.json();
+                const acceptedCandidates = candidates.filter(c => c.status === 'accepted');
+                const candidateWithoutFeedback = acceptedCandidates.find(c => !c.hiring_feedback);
+                
+                if (candidateWithoutFeedback) {
+                    showHiringFeedbackModal(
+                        candidateWithoutFeedback._id,
+                        candidateWithoutFeedback.first_name,
+                        candidateWithoutFeedback.last_name
+                    );
+                }
+            } catch (error) {
+                console.error('Error checking initial feedback status:', error);
+            }
+        }
+
+        // Update showHiringFeedbackModal function
+        function showHiringFeedbackModal(candidateId, firstName, lastName) {
+            const candidateName = `${firstName} ${lastName}`;
+            const textarea = document.getElementById('hiringFeedbackInput');
+            const label = document.getElementById('hiringFeedbackLabel');
+            
+            // Update modal content
+            label.textContent = `Why was ${candidateName} selected for this position?`;
+            document.getElementById('feedbackCandidateId').value = candidateId;
+            
+            // Force enable the textarea
+            textarea.disabled = false;
+            textarea.readOnly = false;
+            textarea.style.pointerEvents = 'auto';
+            textarea.style.userSelect = 'text';
+            
+            // Show the modal using the stored instance
+            window.hiringFeedbackModal.show();
+        }
+
+        // Add debug logging to track textarea state
+        document.getElementById('hiringFeedbackInput').addEventListener('click', function(e) {
+            console.log('Textarea clicked');
+            console.log('Disabled:', this.disabled);
+            console.log('ReadOnly:', this.readOnly);
+            console.log('Pointer Events:', window.getComputedStyle(this).pointerEvents);
+            console.log('User Select:', window.getComputedStyle(this).userSelect);
+        });
+
+        // Add toast functionality
+        function showToast(message, type = 'info') {
+            const toastContainer = document.getElementById('toastContainer') || createToastContainer();
+            const toast = document.createElement('div');
+            toast.className = `toast align-items-center text-white bg-${type} border-0`;
+            toast.setAttribute('role', 'alert');
+            toast.setAttribute('aria-live', 'assertive');
+            toast.setAttribute('aria-atomic', 'true');
+            
+            toast.innerHTML = `
+                <div class="d-flex">
+                    <div class="toast-body">
+                        ${message}
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                </div>
+            `;
+            
+            toastContainer.appendChild(toast);
+            const bsToast = new bootstrap.Toast(toast);
+            bsToast.show();
+            
+            toast.addEventListener('hidden.bs.toast', () => {
+                toast.remove();
+            });
+        }
+
+        function createToastContainer() {
+            const container = document.createElement('div');
+            container.id = 'toastContainer';
+            container.className = 'toast-container position-fixed bottom-0 end-0 p-3';
+            document.body.appendChild(container);
+            return container;
+        }
+
+        // Update submitHiringFeedback function
+        async function submitHiringFeedback() {
+            const candidateId = document.getElementById('feedbackCandidateId').value;
+            const textarea = document.getElementById('hiringFeedbackInput');
+            const feedback = textarea.value;
+            const processFeedbackBtn = document.querySelector('.btn-ai');
+            
+            if (!feedback.trim()) {
+                alert('Please provide hiring feedback before submitting.');
+                textarea.focus();
+                return;
+            }
+
+            try {
+                // Disable the submit button and show loading state
+                processFeedbackBtn.disabled = true;
+                processFeedbackBtn.innerHTML = '<i class="bi bi-arrow-repeat spin me-2"></i>Processing...';
+
+                // Send the feedback to the AI processing endpoint
+                const aiResponse = await fetch(`${API_BASE_URL}/api/ai/process-feedback`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify({
+                        candidateId,
+                        feedback,
+                        vacancyId: currentVacancyId
+                    })
+                });
+
+                if (!aiResponse.ok) {
+                    throw new Error('AI processing failed');
+                }
+
+                const aiResult = await aiResponse.json();
+                console.log('AI feedback response:', aiResult);
+
+                // Fetch fresh candidate data for the current vacancy
+                const candidatesResponse = await fetch(`${API_BASE_URL}/api/vacancies/${currentVacancyId}/candidates`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                if (!candidatesResponse.ok) {
+                    throw new Error('Failed to fetch updated candidates');
+                }
+
+                const candidates = await candidatesResponse.json();
+                console.log('Updated candidates list after feedback:', candidates);
+                currentVacancyCandidates = candidates;
+
+                // Update the candidates list display
+                displayCandidates(candidates);
+
+                // Update the feedback badge
+                updateFeedbackBadge();
+
+                // Close the modal and reset the form
+                const feedbackModal = bootstrap.Modal.getInstance(document.getElementById('hiringFeedbackModal'));
+                feedbackModal.hide();
+                textarea.value = '';
+
+                // Show success message
+                showToast('Feedback submitted successfully!', 'success');
+
+            } catch (error) {
+                console.error('Error submitting feedback:', error);
+                showToast('Error submitting feedback: ' + error.message, 'error');
+            } finally {
+                // Reset the button state
+                processFeedbackBtn.disabled = false;
+                processFeedbackBtn.innerHTML = '<i class="bi bi-lightning me-2"></i>Process Feedback';
+            }
+        }
+
+        // Update the updateCandidateStatus function to not automatically show feedback modal
+        async function updateCandidateStatus(candidateId, status) {
+            try {
+                const statusMap = {
+                    'Pending': 'pending',
+                    'Interviewed': 'interview',
+                    'Accepted': 'accepted',
+                    'Rejected': 'rejected',
+                    'Hired': 'accepted'
+                };
+
+                const backendStatus = statusMap[status] || status.toLowerCase();
+                
+                const response = await fetch(`${API_BASE_URL}/api/candidates/${candidateId}/status`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify({ status: backendStatus })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Failed to update status');
+                }
+
+                // Find the candidate in the current list
+                const candidateIndex = currentVacancyCandidates.findIndex(c => c._id === candidateId);
+                
+                // Update the local candidate data if found
+                if (candidateIndex !== -1) {
+                    const candidate = currentVacancyCandidates[candidateIndex];
+                    currentVacancyCandidates[candidateIndex].status = backendStatus;
+                }
+
+                // Refresh the candidates list
+                displayCandidates(currentVacancyCandidates);
+                return true;
+            } catch (error) {
+                console.error('Error updating candidate status:', error);
+                alert(`Failed to update status: ${error.message}`);
+                return false;
+            }
+        }
+
+        // Modify viewTopCandidates function to remove automatic feedback check
+        async function viewTopCandidates(vacancyId, title) {
+            try {
+                isTopCandidatesView = true;
+                currentVacancyId = vacancyId;
+                console.log('Fetching top candidates for vacancy:', vacancyId);
+                
+                const response = await fetch(`${API_BASE_URL}/api/vacancies/${vacancyId}/top-candidates`, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    mode: 'cors'
+                });
+
+                if (!response.ok) {
+                        throw new Error(`Server returned ${response.status}: ${response.statusText}`);
+                }
+
+                const candidates = await response.json();
+                currentVacancyCandidates = candidates;
+                
+                document.getElementById('vacancyTitle').textContent = `Top Candidates for ${title}`;
+                displayCandidates(candidates);
+                
+                // Use the stored modal instance
+                window.candidatesModal.show();
+            } catch (error) {
+                console.error('Error loading top candidates:', error);
+                alert(`Error loading top candidates: ${error.message}`);
+            }
+        }
+
+        // Helper function to get status color
+        function getStatusColor(status) {
+            const colors = {
+                'pending': 'warning',
+                'interview': 'info',
+                'accepted': 'success',
+                'rejected': 'danger'
+            };
+            return colors[status.toLowerCase()] || 'secondary';
+        }
+
+        // Helper function for match score colors
+        function getMatchScoreColor(score) {
+            if (score >= 0.8) return '#28a745'; // Green for excellent match
+            if (score >= 0.6) return '#17a2b8'; // Blue for good match
+            if (score >= 0.4) return '#ffc107'; // Yellow for moderate match
+            return '#dc3545'; // Red for low match
+        }
+
+        function viewResume(resumePath) {
+            if (!resumePath) {
+                alert('Resume not available');
+                return;
+            }
+            
+            // If it's already a full URL, use it as is
+            if (resumePath.startsWith('http')) {
+                window.open(resumePath, '_blank');
+                return;
+            }
+
+            // If it's a full file path, extract just the filename
+            const filename = resumePath.includes('/') ? 
+                resumePath.split('/').pop() : 
+                resumePath;
+
+            // Log the resume path and constructed URL for debugging
+            console.log('Resume path:', resumePath);
+            console.log('Filename:', filename);
+            
+            // Create the URL using the filename
+            const resumeUrl = `${API_BASE_URL}/resumes/${filename}`;
+            console.log('Resume URL:', resumeUrl);
+            
+            window.open(resumeUrl, '_blank');
+        }
+
+        // Load vacancies when page loads
+        document.addEventListener('DOMContentLoaded', loadVacancies);
+
+        // Currency symbol mapping
+        function getCurrencySymbol(currency) {
+            const symbols = {
+                'USD': '$',
+                'EUR': '€',
+                'GBP': '£',
+                'JPY': '¥',
+                'AUD': 'A$',
+                'CAD': 'C$',
+                'CHF': 'Fr',
+                'CNY': '¥',
+                'HKD': 'HK$',
+                'NZD': 'NZ$',
+                'SEK': 'kr',
+                'KRW': '₩',
+                'SGD': 'S$',
+                'NOK': 'kr',
+                'MXN': '$',
+                'INR': '₹',
+                'RUB': '₽',
+                'ZAR': 'R',
+                'TRY': '₺',
+                'BRL': 'R$',
+                'TWD': 'NT$',
+                'DKK': 'kr',
+                'PLN': 'zł',
+                'THB': '฿',
+                'IDR': 'Rp',
+                'HUF': 'Ft',
+                'CZK': 'Kč',
+                'ILS': '₪',
+                'CLP': '$',
+                'PHP': '₱',
+                'AED': 'د.إ',
+                'COP': '$',
+                'SAR': '﷼',
+                'MYR': 'RM',
+                'RON': 'lei'
+            };
+            return symbols[currency] || currency;
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('userRole');
+            window.location.href = 'login.html';
+        }
+
+        // Add the deleteVacancy function before the closing script tag
+        async function deleteVacancy(vacancyId) {
+            if (!confirm('Are you sure you want to delete this vacancy? This action cannot be undone.')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/vacancies/${vacancyId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    // Reload the vacancies list
+                    loadVacancies();
+                } else {
+                    throw new Error('Failed to delete vacancy');
+                }
+            } catch (error) {
+                console.error('Error deleting vacancy:', error);
+                alert('Error deleting vacancy. Please try again.');
+            }
+        }
+
+        // Add new function to handle hiring
+        async function hireCandidate(candidateId, firstName, lastName, email) {
+            if (!confirm(`Are you sure you want to hire ${firstName} ${lastName}?`)) {
+                return;
+            }
+
+            try {
+                // Update candidate status to Accepted
+                const success = await updateCandidateStatus(candidateId, 'Accepted');
+                if (!success) {
+                    return;
+                }
+
+                // Prepare hiring email
+                const emailTemplate = `Dear ${firstName} ${lastName},
+
+We are pleased to inform you that after careful consideration of your application and interview, we would like to offer you the position at Tech Mahindra.
+
+We were impressed with your qualifications and believe you will be a valuable addition to our team. We look forward to having you join us and contribute to our company's success.
+
+Please review the attached offer letter for details regarding your position, compensation, and start date. If you have any questions or need clarification, feel free to reach out to us.
+
+We are excited to welcome you to the Tech Mahindra family!
+
+Best regards,
+[Your Full Name]
+Tech Mahindra`;
+
+                // Open email client with pre-filled hiring template
+                const mailtoLink = `mailto:${email}?subject=Job Offer - Tech Mahindra&body=${encodeURIComponent(emailTemplate)}`;
+                window.location.href = mailtoLink;
+            } catch (error) {
+                console.error('Error hiring candidate:', error);
+                alert(`Failed to hire candidate: ${error.message}`);
+            }
+        }
+
+        // Add function to show pending feedbacks
+        function showPendingFeedbacks() {
+            // Fetch fresh data before showing pending feedbacks
+            fetch(`${API_BASE_URL}/api/vacancies/${currentVacancyId}/candidates`, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            })
+            .then(response => response.json())
+            .then(candidates => {
+                const acceptedCandidates = candidates.filter(c => c.status === 'accepted' && !c.hiring_feedback);
+                
+                if (acceptedCandidates.length === 0) {
+                    alert('No pending feedbacks at the moment.');
+                    return;
+                }
+                
+                // Show the first candidate that needs feedback
+                const candidate = acceptedCandidates[0];
+                showHiringFeedbackModal(
+                    candidate._id,
+                    candidate.first_name,
+                    candidate.last_name
+                );
+            })
+            .catch(error => {
+                console.error('Error fetching candidates for feedback:', error);
+                alert('Error checking pending feedbacks');
+            });
+        }
+
+        // Update the badge count whenever candidates are loaded or status changes
+        function updateFeedbackBadge() {
+            // Fetch fresh data for the badge count
+            fetch(`${API_BASE_URL}/api/vacancies/${currentVacancyId}/candidates`, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            })
+            .then(response => response.json())
+            .then(candidates => {
+                const pendingCount = candidates.filter(c => c.status === 'accepted' && !c.hiring_feedback).length;
+                const badge = document.getElementById('feedbackBadge');
+                
+                if (pendingCount > 0) {
+                    badge.textContent = pendingCount;
+                    badge.style.display = 'block';
+                } else {
+                    badge.style.display = 'none';
+                }
+            })
+            .catch(error => {
+                console.error('Error updating feedback badge:', error);
+            });
+        }
+
+        // Add CSS for all custom styles
+        const style = document.createElement('style');
+        style.textContent = `
+            /* Base modal styling */
+            .feedback-modal .modal-content {
+                border-radius: 12px;
+                overflow: hidden;
+            }
+
+            /* Light mode styles */
+            [data-theme="light"] .feedback-modal .modal-content {
+                background-color: #ffffff;
+                border: 1px solid #e0e0e0;
+            }
+
+            [data-theme="light"] .feedback-modal .modal-header,
+            [data-theme="light"] .feedback-modal .modal-footer {
+                background-color: #f8f9fa;
+                border-color: #e9ecef;
+            }
+
+            [data-theme="light"] .feedback-modal .modal-body {
+                background-color: #ffffff;
+            }
+
+            [data-theme="light"] .feedback-textarea {
+                background-color: #ffffff !important;
+                color: #1e2736 !important;
+                border: 1px solid #e91e63 !important;
+            }
+
+            [data-theme="light"] .feedback-textarea::placeholder {
+                color: #6c757d;
+            }
+
+            [data-theme="light"] .feedback-question {
+                color: #e91e63;
+            }
+
+            [data-theme="light"] .ai-container {
+                background-color: #f8f9fa;
+                border: 1px solid #e9ecef;
+            }
+
+            [data-theme="light"] .modal-title {
+                color: #1e2736;
+            }
+
+            [data-theme="light"] .btn-close {
+                filter: none;
+            }
+
+            /* Dark mode styles */
+            [data-theme="dark"] .feedback-modal .modal-content {
+                background-color: #1a1b1e;
+                border: 1px solid #2c2e33;
+            }
+
+            [data-theme="dark"] .feedback-modal .modal-header,
+            [data-theme="dark"] .feedback-modal .modal-footer {
+                background-color: #1f2124;
+                border-color: #2c2e33;
+            }
+
+            [data-theme="dark"] .feedback-modal .modal-body {
+                background-color: #1a1b1e;
+            }
+
+            [data-theme="dark"] .feedback-textarea {
+                background-color: #2c2e33 !important;
+                color: #ffffff !important;
+                border: 1px solid #e91e63 !important;
+            }
+
+            [data-theme="dark"] .feedback-textarea::placeholder {
+                color: #a0a0a0;
+            }
+
+            [data-theme="dark"] .feedback-question {
+                color: #ff4081;
+            }
+
+            [data-theme="dark"] .ai-container {
+                background-color: #1f2124;
+                border: 1px solid #2c2e33;
+            }
+
+            [data-theme="dark"] .modal-title {
+                color: #ffffff;
+            }
+
+            [data-theme="dark"] .btn-close {
+                filter: invert(1) grayscale(100%) brightness(200%);
+            }
+
+            /* Common styles */
+            .feedback-modal .modal-header,
+            .feedback-modal .modal-footer {
+                padding: 1rem 1.5rem;
+            }
+
+            .feedback-modal .modal-body {
+                padding: 1.5rem;
+            }
+
+            .feedback-textarea {
+                border-radius: 8px;
+                padding: 1rem;
+                font-size: 1rem;
+                line-height: 1.5;
+                transition: all 0.3s ease;
+                resize: vertical;
+                min-height: 120px;
+                width: 100%;
+            }
+
+            .feedback-textarea:focus {
+                box-shadow: 0 0 0 0.2rem rgba(233, 30, 99, 0.25) !important;
+                border-color: #ff4081 !important;
+                outline: none;
+            }
+
+            .feedback-question {
+                font-size: 1.1rem;
+                font-weight: 500;
+                margin-bottom: 1rem;
+            }
+
+            .ai-container {
+                border-radius: 8px;
+                padding: 1rem;
+                margin-bottom: 1.5rem;
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+            }
+
+            .ai-icon {
+                width: 40px;
+                height: 40px;
+                background: #e91e63;
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #ffffff;
+                font-size: 20px;
+            }
+
+            .modal-title {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                font-size: 1.25rem;
+                font-weight: 600;
+            }
+
+            .modal-title i {
+                color: #e91e63;
+                font-size: 1.2em;
+            }
+
+            /* Candidates view header */
+            #vacancyTitle {
+                font-size: 1.25rem;
+                font-weight: 600;
+                color: var(--text-primary);
+                margin: 0;
+                padding: 0;
+            }
+
+            .modal-header .btn-warning {
+                background-color: #ffd740;
+                border-color: #ffd740;
+                color: #000000;
+            }
+
+            .modal-header .btn-warning:hover {
+                background-color: #ffc107;
+                border-color: #ffc107;
+            }
+
+            /* Button styles */
+            .btn-ai {
+                background: #e91e63;
+                border: none;
+                color: #ffffff;
+                padding: 0.75rem 1.25rem;
+                border-radius: 6px;
+                font-weight: 500;
+                transition: all 0.3s ease;
+            }
+
+            .btn-ai:hover {
+                background: #ff4081;
+                transform: translateY(-1px);
+                box-shadow: 0 4px 12px rgba(233, 30, 99, 0.2);
+            }
+
+            .btn-outline-secondary {
+                padding: 0.75rem 1.25rem;
+                border-radius: 6px;
+                transition: all 0.3s ease;
+            }
+
+            [data-theme="light"] .btn-outline-secondary {
+                color: #495057;
+                border: 1px solid #ced4da;
+                background: transparent;
+            }
+
+            [data-theme="light"] .btn-outline-secondary:hover {
+                background: #e9ecef;
+                color: #212529;
+                border-color: #ced4da;
+            }
+
+            [data-theme="dark"] .btn-outline-secondary {
+                color: #e0e0e0;
+                border: 1px solid #404040;
+                background: transparent;
+            }
+
+            [data-theme="dark"] .btn-outline-secondary:hover {
+                background: #404040;
+                color: #ffffff;
+                border-color: #505050;
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Add loading spinner animation
+        const spinnerStyle = document.createElement('style');
+        spinnerStyle.textContent = `
+            .spin {
+                animation: spin 1s linear infinite;
+            }
+            
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(spinnerStyle);
+
+        // Show candidate registration modal
+        const candidateFormModal = new bootstrap.Modal(document.getElementById('candidateFormModal'));
+        document.getElementById('toggleCandidateForm').addEventListener('click', () => {
+            candidateFormModal.show();
+            loadVacancyOptions();
+        });
+
+        // Load vacancies into the select dropdown
+        async function loadVacancyOptions() {
+            const select = document.getElementById('candidateVacancySelect');
+            select.innerHTML = '<option value="">Select Vacancy</option>';
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/vacancies`);
+                if (!response.ok) throw new Error('Failed to load vacancies');
+                const vacancies = await response.json();
+                vacancies.forEach(vacancy => {
+                    const option = document.createElement('option');
+                    option.value = vacancy._id || vacancy.id;
+                    option.textContent = vacancy.title;
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error loading vacancies:', error);
+            }
+        }
+
+        // Handle candidate form submission
+        const candidateForm = document.getElementById('newCandidateForm');
+        candidateForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(candidateForm);
+            const data = Object.fromEntries(formData.entries());
+            // Combine country and city into location
+            data.location = `${data.city} - ${data.country}`;
+            // Remove city and country fields from payload
+            delete data.city;
+            delete data.country;
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/candidates`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    alert('Error registering candidate: ' + (errorData.error || response.statusText));
+                    return;
+                }
+                alert('Candidate registered successfully!');
+                candidateFormModal.hide();
+                candidateForm.reset();
+            } catch (error) {
+                alert('Error registering candidate.');
+                console.error(error);
+            }
+        });
+    </script>
+</body>
+</html> 

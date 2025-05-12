@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200" height="50" viewBox="0 0 200 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Main circle -->
+    <circle cx="25" cy="25" r="20" fill="#232F3E"/>
+    
+    <!-- Top arc -->
+    <path d="M5 25C5 14.5066 13.5066 6 24 6C34.4934 6 43 14.5066 43 25" stroke="#F45B4E" stroke-width="6"/>
+    
+    <!-- Smile line -->
+    <path d="M15 28C15 28 20 32 25 32C30 32 35 28 35 28" stroke="white" stroke-width="3" stroke-linecap="round"/>
+    
+    <!-- Dots -->
+    <circle cx="45" cy="25" r="4" fill="#F45B4E"/>
+    <circle cx="5" cy="25" r="4" fill="#F45B4E"/>
+    <circle cx="25" cy="45" r="4" fill="#232F3E"/>
+    
+    <!-- Text -->
+    <text x="60" y="35" font-family="Poppins, sans-serif" font-size="24" font-weight="700" fill="#232F3E">
+        STAFOR<tspan fill="#F45B4E">.AI</tspan>
+    </text>
+</svg> 

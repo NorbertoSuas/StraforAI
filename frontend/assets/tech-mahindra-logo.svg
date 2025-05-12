@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="320" height="160" viewBox="0 0 320 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <g>
+    <!-- Half red, half dark blue circle -->
+    <defs>
+      <linearGradient id="halfCircle" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="50%" stop-color="#E74C3C"/>
+        <stop offset="50%" stop-color="#23313C"/>
+      </linearGradient>
+    </defs>
+    <circle cx="80" cy="80" r="64" fill="url(#halfCircle)"/>
+    <!-- Network/AI node lines -->
+    <g stroke="#23313C" stroke-width="5" stroke-linecap="round">
+      <line x1="80" y1="80" x2="80" y2="30"/>
+      <line x1="80" y1="80" x2="120" y2="50"/>
+      <line x1="80" y1="80" x2="120" y2="110"/>
+      <line x1="80" y1="80" x2="80" y2="130"/>
+      <line x1="80" y1="80" x2="40" y2="110"/>
+      <line x1="80" y1="80" x2="40" y2="50"/>
+    </g>
+    <!-- Node circles -->
+    <g fill="#fff" stroke="#23313C" stroke-width="4">
+      <circle cx="80" cy="80" r="12"/>
+      <circle cx="80" cy="30" r="7"/>
+      <circle cx="120" cy="50" r="7"/>
+      <circle cx="120" cy="110" r="7"/>
+      <circle cx="80" cy="130" r="7"/>
+      <circle cx="40" cy="110" r="7"/>
+      <circle cx="40" cy="50" r="7"/>
+    </g>
+    <!-- Arrow to the right -->
+    <g>
+      <rect x="144" y="72" width="80" height="16" rx="8" fill="#23313C"/>
+      <polygon points="224,60 256,80 224,100" fill="#23313C"/>
+    </g>
+    <!-- STRAFOR.AI text -->
+    <text x="80" y="155" font-family="Arial, Helvetica, sans-serif" font-size="40" font-weight="bold" fill="#23313C" text-anchor="middle" letter-spacing="2">STRAFOR.AI</text>
+  </g>
+</svg> 

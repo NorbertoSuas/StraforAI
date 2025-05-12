@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STRAFOR.AI HR Portal - Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body {
+            font-family: 'Poppins', 'Inter', system-ui, sans-serif;
+            background: linear-gradient(120deg, #f8e1e7 0%, #e3f0ff 100%);
+            min-height: 100vh;
+        }
+        .dashboard-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 2rem 0;
+        }
+        .sidebar {
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(26,42,56,0.10);
+            padding: 2rem 1rem 1rem 1rem;
+            margin-right: 2.5rem;
+            min-width: 220px;
+            max-width: 250px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: fit-content;
+        }
+        .sidebar-logo img {
+            max-width: 120px;
+            margin-bottom: 2rem;
+        }
+        .sidebar-nav {
+            width: 100%;
+        }
+        .sidebar-nav a {
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #333;
+            transition: background 0.2s, color 0.2s;
+            padding: 0.75rem 1rem;
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        .sidebar-nav a.active, .sidebar-nav a:hover {
+            background: #e91e63;
+            color: #fff;
+        }
+        .sidebar-nav i {
+            margin-right: 0.75rem;
+            font-size: 1.25rem;
+        }
+        .main-content {
+            background: rgba(255,255,255,0.98);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(26,42,56,0.10);
+            padding: 2.5rem 2rem;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        .section-title, h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #e91e63;
+            letter-spacing: 0.5px;
+            margin-bottom: 2rem;
+        }
+        .dashboard-cards {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2.5rem;
+        }
+        .tm-card, .recent-applications {
+            background: rgba(255,255,255,0.98);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(26,42,56,0.10);
+            border: 1px solid rgba(0,0,0,0.05);
+            padding: 2rem 1.5rem 1.5rem 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .tm-card .card-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #e91e63;
+            margin-bottom: 0.5rem;
+        }
+        .tm-card .card-subtitle {
+            color: #888;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+        .tm-card .card-value {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #23313C;
+        }
+        .tm-card .card-icon {
+            font-size: 2.5rem;
+            color: #e91e63;
+            margin-bottom: 1rem;
+        }
+        .recent-applications h5 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #e91e63;
+            margin-bottom: 1.5rem;
+        }
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .dashboard-wrapper {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .sidebar {
+                margin: 0 auto 2rem auto;
+            }
+            .main-content {
+                margin: 0 auto;
+            }
+        }
+        @media (max-width: 900px) {
+            .dashboard-wrapper {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 1rem 0;
+            }
+            .sidebar {
+                margin: 0 auto 1rem auto;
+                min-width: 100%;
+                max-width: 100%;
+                border-radius: 16px;
+                padding: 1.5rem 0.5rem;
+            }
+            .main-content {
+                padding: 1rem;
+                border-radius: 16px;
+            }
+            .dashboard-cards {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+        @media (max-width: 600px) {
+            .main-content {
+                padding: 0.5rem;
+                border-radius: 10px;
+            }
+            .section-title, h1 {
+                font-size: 1.5rem;
+            }
+            .sidebar {
+                padding: 1rem 0.25rem;
+                border-radius: 10px;
+            }
+        }
+        /* Dark mode */
+        [data-theme="dark"] body {
+            background: linear-gradient(135deg, #23242a 0%, #2d2e36 100%);
+        }
+        [data-theme="dark"] .main-content,
+        [data-theme="dark"] .tm-card,
+        [data-theme="dark"] .recent-applications {
+            background: rgba(30,32,38,0.98);
+            color: #fff;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        [data-theme="dark"] .sidebar {
+            background: rgba(30,32,38,0.95);
+            color: #fff;
+            box-shadow: 0 4px 24px rgba(233,30,99,0.10);
+        }
+        [data-theme="dark"] .sidebar-nav a {
+            color: #eee;
+        }
+        [data-theme="dark"] .sidebar-nav a.active,
+        [data-theme="dark"] .sidebar-nav a:hover {
+            background: #e91e63;
+            color: #fff;
+        }
+        [data-theme="dark"] .tm-card .card-title,
+        [data-theme="dark"] .recent-applications h5,
+        [data-theme="dark"] .section-title,
+        [data-theme="dark"] h1 {
+            color: #ff4081;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-wrapper">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-logo">
+                <img src="assets/ChatGPT-Image-3-may-2025_-00_45_24.svg" alt="STRAFOR.AI Logo">
+            </div>
+            <ul class="sidebar-nav">
+                <li><a href="dashboard.html" class="active"><i class="bi bi-speedometer2"></i>Dashboard</a></li>
+                <li><a href="vacancies.html"><i class="bi bi-briefcase"></i>Vacancies</a></li>
+                <li><a href="settings.html"><i class="bi bi-gear"></i>Settings</a></li>
+                <li><a href="#" onclick="logout()"><i class="bi bi-box-arrow-right"></i>Logout</a></li>
+            </ul>
+        </div>
+        <!-- Main Content -->
+        <div class="main-content">
+            <h1 class="section-title">Dashboard</h1>
+            <div class="tm-card mb-4">
+                <div class="card-header">
+                    <h5><i class="bi bi-briefcase me-2"></i>Active Vacancies</h5>
+                </div>
+                <div class="card-body">
+                    <h2 class="card-title" id="activeVacancies">0</h2>
+                </div>
+            </div>
+            <div class="tm-card mb-4">
+                <div class="card-header">
+                    <h5><i class="bi bi-people me-2"></i>Total Candidates</h5>
+                </div>
+                <div class="card-body">
+                    <h2 class="card-title" id="totalApplications">0</h2>
+                </div>
+            </div>
+            <div class="tm-card mb-4">
+                <div class="card-header">
+                    <h5><i class="bi bi-person-check me-2"></i>On Duty</h5>
+                </div>
+                <div class="card-body">
+                    <h2 class="card-title" id="onDuty">0</h2>
+                </div>
+            </div>
+            <div class="tm-card mb-4">
+                <div class="card-header">
+                    <h5><i class="bi bi-person-dash me-2"></i>On Leave</h5>
+                </div>
+                <div class="card-body">
+                    <h2 class="card-title" id="onLeave">0</h2>
+                </div>
+            </div>
+            <div class="tm-card">
+                <div class="card-header">
+                    <h5><i class="bi bi-clock-history me-2"></i>Recent Activity</h5>
+                </div>
+                <div class="card-body" id="recentApplicationsList">
+                    <!-- Applications will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Candidate Modal -->
+    <div class="modal fade candidate-modal" id="candidateModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Candidate Information</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="candidateModalBody">
+                    <!-- Candidate details will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/theme-manager.js"></script>
+    <script>
+        // Example: Load stats and recent applications (replace with real API calls)
+        document.getElementById('activeVacancies').textContent = 13;
+        document.getElementById('totalApplications').textContent = 42;
+        document.getElementById('onDuty').textContent = 3;
+        document.getElementById('onLeave').textContent = 1;
+        // Example: Load recent applications
+        const recentApplications = [
+            { name: 'John Doe', type: 'Leave', status: 'Approved', date: '2024-05-01', details: 'Out of Town', id: 1 },
+            { name: 'Jane Smith', type: 'On Duty', status: 'Pending', date: '2024-05-02', details: 'Conference', id: 2 },
+            { name: 'Alice Brown', type: 'Leave', status: 'Rejected', date: '2024-05-03', details: 'Family Function', id: 3 },
+        ];
+        function showCandidateModal(id) {
+            const candidate = recentApplications.find(a => a.id === id);
+            if (!candidate) return;
+            document.getElementById('candidateModalBody').innerHTML = `
+                <div><strong>Name:</strong> ${candidate.name}</div>
+                <div><strong>Type:</strong> ${candidate.type}</div>
+                <div><strong>Status:</strong> ${candidate.status}</div>
+                <div><strong>Date:</strong> ${candidate.date}</div>
+                <div><strong>Details:</strong> ${candidate.details}</div>
+            `;
+            new bootstrap.Modal(document.getElementById('candidateModal')).show();
+        }
+        document.getElementById('recentApplicationsList').innerHTML = recentApplications.map(a => `
+            <div class="d-flex align-items-center justify-content-between mb-2 p-2 rounded" style="background:#f5f7fa;">
+                <div>
+                    <strong>${a.type}</strong> - ${a.details} <span class="badge bg-secondary">${a.status}</span>
+                </div>
+                <button class="btn btn-outline-primary btn-sm" onclick="showCandidateModal(${a.id})">View</button>
+            </div>
+        `).join('');
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('userRole');
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+</html> 

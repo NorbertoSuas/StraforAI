@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Innovation Meetup</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --strafor-red: #E74C3C;
+            --strafor-blue: #23313C;
+            --strafor-light: #f5f7fa;
+
+            --bg-primary: #fff;
+            --bg-primary-rgb: 255, 255, 255;
+            --bg-secondary: #f5f7fa;
+            --text-primary: #23313C;
+            --text-secondary: #6c757d;
+            --border-color: #e1e1e1;
+            --input-bg: #fff;
+            --input-text: #23313C;
+            --card-shadow: 0 8px 24px rgba(35, 49, 60, 0.08);
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #181f2a;
+            --bg-primary-rgb: 24, 31, 42;
+            --bg-secondary: #232b3a;
+            --text-primary: #f5f7fa;
+            --text-secondary: #b0b8c1;
+            --border-color: #2c3440;
+            --input-bg: #232b3a;
+            --input-text: #f5f7fa;
+            --card-shadow: 0 8px 32px rgba(20, 30, 50, 0.25);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            color: var(--text-primary);
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(120deg, #f5f7fa 0%, #e9ecef 100%);
+        }
+
+        #video-background {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -1;
+            object-fit: cover;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: -1;
+        }
+
+        .login-container {
+            max-width: 420px;
+            width: 90%;
+            padding: 2.5rem 2.5rem 2rem 2.5rem;
+            background: linear-gradient(135deg, var(--bg-primary) 60%, var(--bg-secondary) 100%);
+            border-radius: 24px;
+            box-shadow: 0 8px 32px rgba(35,49,60,0.12);
+            transition: transform 0.3s cubic-bezier(.4,2,.6,1);
+            backdrop-filter: blur(16px);
+            border: 1.5px solid #eaeaea;
+        }
+
+        .login-container:hover {
+            transform: translateY(-5px);
+        }
+
+        .login-logo {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .login-logo img {
+            width: 160px;
+            height: 160px;
+            object-fit: contain;
+            margin-bottom: 0.5rem;
+            filter: drop-shadow(0 4px 16px rgba(35,49,60,0.15));
+        }
+
+        .welcome-text {
+            color: var(--text-primary);
+            font-size: 1.75rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            font-weight: 500;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-group label i {
+            margin-right: 0.5rem;
+            color: var(--strafor-red);
+        }
+
+        .form-control {
+            padding: 0.875rem 1.25rem;
+            border-radius: 10px;
+            border: 2px solid #e1e1e1;
+            font-size: 1.05rem;
+            transition: border 0.3s, box-shadow 0.3s;
+            background-color: var(--input-bg);
+            color: var(--input-text);
+            box-shadow: 0 1px 4px rgba(35,49,60,0.04);
+        }
+
+        .form-control:focus {
+            border-color: #E74C3C;
+            box-shadow: 0 0 0 0.2rem rgba(231, 76, 60, 0.18);
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, #E74C3C 60%, #23313C 100%);
+            border: 1.5px solid #fff1;
+            padding: 0.875rem 1.5rem;
+            font-weight: 700;
+            width: 100%;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(231,76,60,0.08);
+            transition: background 0.2s, box-shadow 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(90deg, #23313C 0%, #E74C3C 100%);
+            box-shadow: 0 4px 16px rgba(35,49,60,0.18);
+            transform: translateY(-2px) scale(1.03);
+        }
+
+        .error-message {
+            color: var(--strafor-red);
+            text-align: center;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            padding: 0.75rem;
+            background-color: rgba(231, 76, 60, 0.08);
+            border-radius: 6px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--bg-primary);
+            border: 2px solid var(--border-color);
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            transform: translateY(-2px);
+        }
+
+        .theme-toggle i {
+            font-size: 1.25rem;
+            color: var(--text-primary);
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 2rem;
+            }
+            
+            .welcome-text {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <video id="video-background" autoplay muted loop>
+        <source src="assets/video fondo.mp4" type="video/mp4">
+    </video>
+    <div class="overlay"></div>
+    
+    <div class="login-container">
+        <div class="login-logo">
+            <img src="assets/ChatGPT-Image-3-may-2025_-00_45_24.svg" alt="STRAFOR.AI Logo">
+        </div>
+        <h4 class="welcome-text">Welcome to STRAFOR</h4>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email">
+                    <i class="bi bi-envelope-fill"></i>Email Address
+                </label>
+                <input type="email" class="form-control" id="email" name="email" required 
+                       placeholder="Enter your email">
+            </div>
+            <div class="form-group">
+                <label for="password">
+                    <i class="bi bi-lock-fill"></i>Password
+                </label>
+                <input type="password" class="form-control" id="password" name="password" required
+                       placeholder="Enter your password">
+            </div>
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-box-arrow-in-right"></i>
+                Sign In
+            </button>
+            <div id="errorMessage" class="error-message"></div>
+        </form>
+    </div>
+
+    <button class="theme-toggle" id="themeToggle">
+        <i class="bi bi-sun-fill"></i>
+    </button>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/theme-manager.js"></script>
+    <script>
+        // Theme toggle functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const themeToggle = document.getElementById('themeToggle');
+            const icon = themeToggle.querySelector('i');
+            
+            // Apply saved theme
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            icon.className = savedTheme === 'light' ? 'bi bi-sun-fill' : 'bi bi-moon-fill';
+            
+            themeToggle.addEventListener('click', () => {
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+                
+                document.documentElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                icon.className = newTheme === 'light' ? 'bi bi-sun-fill' : 'bi bi-moon-fill';
+            });
+        });
+
+        // Login form functionality
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('errorMessage');
+            
+            try {
+                const loginResponse = await fetch('http://localhost:3000/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                if (!loginResponse.ok) {
+                    const errorData = await loginResponse.json();
+                    throw new Error(errorData.message || 'Login failed');
+                }
+
+                const data = await loginResponse.json();
+                
+                // Store user data
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('userRole', data.user.role);
+
+                // Redirect based on role
+                if (data.user.role === 'admin') {
+                    window.location.href = 'admin-dashboard.html';
+                } else {
+                    window.location.href = 'index.html';
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                errorMessage.textContent = error.message || 'An error occurred during login';
+                errorMessage.classList.add('show');
+            }
+        });
+    </script>
+</body>
+</html> 

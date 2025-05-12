@@ -1,0 +1,178 @@
+.candidates-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 280px;
+  background-color: var(--bg-card);
+  border-right: 1px solid var(--border-color);
+  padding: 1rem;
+  position: fixed;
+  height: 100vh;
+  overflow-y: auto;
+  box-shadow: 4px 0 24px var(--shadow-color);
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+.sidebar-logo {
+  padding: 2rem;
+  text-align: center;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.sidebar-logo img {
+  max-width: 180px;
+  height: auto;
+}
+
+.main-content {
+  flex: 1;
+  margin-left: 280px;
+  padding: 2rem;
+  background-color: var(--bg-main);
+  min-height: 100vh;
+}
+
+.form-card {
+  background-color: var(--bg-card);
+  border-radius: 16px;
+  box-shadow: 0 4px 24px var(--shadow-color);
+}
+
+/* Table styles */
+.MuiTableContainer-root {
+  background-color: var(--bg-card);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.MuiTableHead-root {
+  background-color: var(--bg-card);
+}
+
+.MuiTableCell-head {
+  color: var(--text-color);
+  font-weight: 600;
+}
+
+.MuiTableCell-body {
+  color: var(--text-color);
+}
+
+.MuiTableRow-root:hover {
+  background-color: var(--table-hover);
+}
+
+/* Form styles */
+.MuiTextField-root,
+.MuiFormControl-root {
+  background-color: var(--bg-card);
+}
+
+.MuiInputBase-root {
+  color: var(--text-color);
+}
+
+.MuiInputLabel-root {
+  color: var(--text-color);
+}
+
+.MuiOutlinedInput-notchedOutline {
+  border-color: var(--input-border);
+}
+
+/* Dialog styles */
+.MuiDialog-paper {
+  background-color: var(--bg-card);
+  color: var(--text-color);
+}
+
+/* Chip styles */
+.MuiChip-root {
+  background-color: var(--hover-bg);
+  color: var(--text-color);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .main-content {
+    margin-left: 0;
+  }
+}
+
+/* Theme variables */
+:root {
+  --tm-red: #e23744;
+  --tm-gray: #333333;
+  --tm-light-gray: #f8f9fa;
+  --sidebar-width: 280px;
+}
+
+[data-theme="light"] {
+  --bg-main: #f8f9fa;
+  --bg-card: #ffffff;
+  --text-color: #333333;
+  --border-color: rgba(0, 0, 0, 0.05);
+  --hover-bg: rgba(226, 55, 68, 0.05);
+  --table-hover: rgba(226, 55, 68, 0.02);
+  --input-border: #e1e1e1;
+  --shadow-color: rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="dark"] {
+  --bg-main: #181a20;
+  --bg-card: #23272f;
+  --text-color: #f1f1f1;
+  --border-color: #333a45;
+  --hover-bg: #23272f;
+  --table-hover: #23272f;
+  --input-border: #404040;
+  --shadow-color: rgba(0, 0, 0, 0.4);
+}
+
+/* Extra dark mode tweaks for candidates box */
+[data-theme="dark"] .MuiTableContainer-root,
+[data-theme="dark"] .MuiTableHead-root,
+[data-theme="dark"] .MuiTableCell-head,
+[data-theme="dark"] .MuiTableCell-body,
+[data-theme="dark"] .MuiTableRow-root {
+  background-color: #23272f !important;
+  color: #f1f1f1 !important;
+}
+[data-theme="dark"] .MuiTableRow-root:hover {
+  background-color: #313543 !important;
+}
+[data-theme="dark"] .MuiPaper-root,
+[data-theme="dark"] .MuiCard-root,
+[data-theme="dark"] .form-card {
+  background-color: #23272f !important;
+  color: #f1f1f1 !important;
+}
+[data-theme="dark"] .MuiButton-root {
+  background-color: #313543;
+  color: #f1f1f1;
+}
+[data-theme="dark"] .MuiButton-containedPrimary {
+  background-color: #1e90ff !important;
+  color: #fff !important;
+}
+[data-theme="dark"] .MuiButton-containedSecondary {
+  background-color: #28a745 !important;
+  color: #fff !important;
+}
+[data-theme="dark"] .MuiButton-containedError {
+  background-color: #dc3545 !important;
+  color: #fff !important;
+}
+[data-theme="dark"] .MuiChip-root {
+  background-color: #313543 !important;
+  color: #f1f1f1 !important;
+} 

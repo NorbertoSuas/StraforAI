@@ -1,0 +1,263 @@
+.vacancies-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+.sidebar {
+  width: 250px;
+  background-color: var(--sidebar-color);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--border-color);
+}
+
+.sidebar-logo {
+  padding: 1rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.sidebar-logo img {
+  max-width: 100%;
+  height: auto;
+}
+
+.sidebar-nav {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-nav li {
+  margin-bottom: 0.5rem;
+}
+
+.sidebar-nav a {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  color: var(--text-color);
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.sidebar-nav a:hover {
+  background-color: var(--hover-color);
+}
+
+.sidebar-nav a i {
+  margin-right: 0.75rem;
+  font-size: 1.25rem;
+}
+
+.sidebar-nav li.active a {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.main-content {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+.form-card {
+  background-color: var(--card-color);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.form-card .MuiCardHeader-root {
+  background-color: var(--card-header-color);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.form-card .MuiCardContent-root {
+  padding: 2rem;
+}
+
+.MuiTableContainer-root {
+  background-color: var(--card-color);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.MuiTableHead-root {
+  background-color: var(--card-header-color);
+}
+
+.MuiTableRow-root:hover {
+  background-color: var(--hover-color);
+}
+
+.MuiTableCell-root {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.MuiChip-root {
+  margin: 0.25rem;
+}
+
+.MuiDialog-paper {
+  background-color: var(--card-color);
+  color: var(--text-color);
+}
+
+.MuiDialogTitle-root {
+  background-color: var(--card-header-color);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.MuiDialogContent-root {
+  padding: 2rem;
+}
+
+.MuiDialogActions-root {
+  padding: 1rem;
+  border-top: 1px solid var(--border-color);
+}
+
+/* Theme Variables */
+:root {
+  --background-color: #f5f5f5;
+  --sidebar-color: #ffffff;
+  --card-color: #ffffff;
+  --card-header-color: #f8f9fa;
+  --text-color: #333333;
+  --border-color: #e0e0e0;
+  --hover-color: #f0f0f0;
+  --primary-color: #1976d2;
+}
+
+[data-theme="dark"] {
+  --background-color: #121212;
+  --sidebar-color: #1e1e1e;
+  --card-color: #1e1e1e;
+  --card-header-color: #2d2d2d;
+  --text-color: #ffffff;
+  --border-color: #333333;
+  --hover-color: #2d2d2d;
+  --primary-color: #90caf9;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .vacancies-container {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    padding: 0.5rem;
+  }
+
+  .sidebar-logo {
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .main-content {
+    padding: 1rem;
+  }
+
+  .form-card .MuiCardContent-root {
+    padding: 1rem;
+  }
+
+  .MuiDialogContent-root {
+    padding: 1rem;
+  }
+}
+
+/* Form Styles */
+.MuiTextField-root,
+.MuiFormControl-root {
+  margin-bottom: 1rem;
+}
+
+.MuiInputBase-root {
+  background-color: var(--background-color);
+}
+
+.MuiOutlinedInput-root {
+  border-radius: 4px;
+}
+
+.MuiOutlinedInput-notchedOutline {
+  border-color: var(--border-color);
+}
+
+.MuiInputLabel-root {
+  color: var(--text-color);
+}
+
+.MuiSelect-select {
+  background-color: var(--background-color);
+}
+
+/* Button Styles */
+.MuiButton-root {
+  text-transform: none;
+  font-weight: 500;
+}
+
+.MuiButton-contained {
+  background-color: var(--primary-color);
+}
+
+.MuiButton-contained:hover {
+  background-color: var(--primary-color);
+  opacity: 0.9;
+}
+
+.MuiButton-outlined {
+  border-color: var(--border-color);
+  color: var(--text-color);
+}
+
+/* Table Styles */
+.MuiTable-root {
+  min-width: 650px;
+}
+
+.MuiTableHead-root .MuiTableCell-root {
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.MuiTableBody-root .MuiTableCell-root {
+  color: var(--text-color);
+}
+
+/* Icon Button Styles */
+.MuiIconButton-root {
+  color: var(--text-color);
+}
+
+.MuiIconButton-root:hover {
+  background-color: var(--hover-color);
+}
+
+/* Snackbar Styles */
+.MuiSnackbar-root {
+  bottom: 24px;
+}
+
+.MuiAlert-root {
+  background-color: var(--card-color);
+  color: var(--text-color);
+}
+
+.MuiAlert-standardSuccess {
+  background-color: #4caf50;
+  color: white;
+}
+
+.MuiAlert-standardError {
+  background-color: #f44336;
+  color: white;
+} 

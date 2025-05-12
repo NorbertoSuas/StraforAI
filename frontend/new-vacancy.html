@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tech Mahindra - Post New Vacancy</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .form-container {
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .form-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1em;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+        }
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+        .checkbox-group {
+            margin-top: 10px;
+        }
+        .checkbox-group label {
+            display: flex;
+            align-items: center;
+            font-weight: normal;
+            margin-bottom: 5px;
+        }
+        .checkbox-group input[type="checkbox"] {
+            margin-right: 8px;
+        }
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .btn-cancel {
+            background-color: #95a5a6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .btn-submit {
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .skills-input-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            min-height: 45px;
+        }
+        .skill-tag {
+            background: #f0f0f0;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .skill-tag button {
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            padding: 0;
+            font-size: 12px;
+        }
+        .skills-input {
+            border: none;
+            outline: none;
+            flex: 1;
+            min-width: 100px;
+            padding: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <img src="assets/tech-mahindra-logo.png" alt="Tech Mahindra" style="width: 100%; margin-bottom: 20px;">
+            <ul>
+                <li><a href="dashboard.html"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+                <li><a href="vacancies.html" class="active"><i class="fas fa-briefcase"></i> Vacancies</a></li>
+                <li><a href="candidates.html"><i class="fas fa-users"></i> Candidates</a></li>
+                <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+                <li><a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </div>
+
+        <div class="content">
+            <div class="form-container">
+                <div class="form-header">
+                    <h1>Post New Vacancy</h1>
+                </div>
+
+                <form id="newVacancyForm" onsubmit="handleSubmit(event)">
+                    <div class="form-group">
+                        <label for="title">Job Title</label>
+                        <input type="text" id="title" name="title" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="department">Department</label>
+                        <select id="department" name="department" class="form-control" required>
+                            <option value="">Select Department</option>
+                            <option value="Engineering">Engineering</option>
+                            <option value="Product">Product</option>
+                            <option value="Design">Design</option>
+                            <option value="Finance">Finance</option>
+                            <option value="HR">HR</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="location">Location</label>
+                        <input type="text" id="location" name="location" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="type">Employment Type</label>
+                        <select id="type" name="type" class="form-control" required>
+                            <option value="">Select Type</option>
+                            <option value="Full-time">Full-time</option>
+                            <option value="Part-time">Part-time</option>
+                            <option value="Contract">Contract</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="experience">Experience Level</label>
+                        <select id="experience" name="experience" class="form-control" required>
+                            <option value="">Select Level</option>
+                            <option value="Entry">Entry Level</option>
+                            <option value="Mid">Mid Level</option>
+                            <option value="Senior">Senior Level</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Required Skills</label>
+                        <div class="skills-input-container" id="skillsContainer">
+                            <input type="text" class="skills-input" id="skillInput" placeholder="Type a skill and press Enter">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">Job Description</label>
+                        <textarea id="description" name="description" class="form-control" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="responsibilities">Responsibilities</label>
+                        <textarea id="responsibilities" name="responsibilities" class="form-control" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="requirements">Requirements</label>
+                        <textarea id="requirements" name="requirements" class="form-control" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Benefits</label>
+                        <div class="checkbox-group">
+                            <label>
+                                <input type="checkbox" name="benefits" value="Health Insurance"> Health Insurance
+                            </label>
+                            <label>
+                                <input type="checkbox" name="benefits" value="401k"> 401k
+                            </label>
+                            <label>
+                                <input type="checkbox" name="benefits" value="Remote Work"> Remote Work
+                            </label>
+                            <label>
+                                <input type="checkbox" name="benefits" value="Flexible Hours"> Flexible Hours
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="deadline">Application Deadline</label>
+                        <input type="date" id="deadline" name="deadline" class="form-control" required>
+                    </div>
+
+                    <div class="btn-group">
+                        <button type="button" class="btn-cancel" onclick="window.location.href='vacancies.html'">Cancel</button>
+                        <button type="submit" class="btn-submit">Post Vacancy</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/theme-manager.js"></script>
+
+    <script>
+        // Handle skills input
+        const skillsContainer = document.getElementById('skillsContainer');
+        const skillInput = document.getElementById('skillInput');
+        let skills = [];
+
+        skillInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const skill = skillInput.value.trim();
+                if (skill && !skills.includes(skill)) {
+                    addSkill(skill);
+                    skillInput.value = '';
+                }
+            }
+        });
+
+        function addSkill(skill) {
+            skills.push(skill);
+            const skillTag = document.createElement('div');
+            skillTag.className = 'skill-tag';
+            skillTag.innerHTML = `
+                ${skill}
+                <button type="button" onclick="removeSkill('${skill}')">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            skillsContainer.insertBefore(skillTag, skillInput);
+        }
+
+        function removeSkill(skill) {
+            skills = skills.filter(s => s !== skill);
+            skillsContainer.innerHTML = '';
+            skills.forEach(s => addSkill(s));
+            skillsContainer.appendChild(skillInput);
+        }
+
+        // Handle form submission
+        async function handleSubmit(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            
+            // Add skills to form data
+            formData.append('skills', JSON.stringify(skills));
+
+            // Get selected benefits
+            const benefits = Array.from(form.querySelectorAll('input[name="benefits"]:checked'))
+                .map(checkbox => checkbox.value);
+            formData.append('benefits', JSON.stringify(benefits));
+
+            try {
+                const response = await fetch('http://localhost:3000/api/vacancies', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify(Object.fromEntries(formData))
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to create vacancy');
+                }
+
+                alert('Vacancy posted successfully');
+                window.location.href = 'vacancies.html';
+            } catch (error) {
+                console.error('Error posting vacancy:', error);
+                alert('Error posting vacancy');
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('userRole');
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+</html> 

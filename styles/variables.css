@@ -1,0 +1,107 @@
+:root {
+  /* Primary Colors - Extracted from the logo */
+  --color-coral: #F45B4E;  /* Logo's coral/red color */
+  --color-navy: #232F3E;   /* Logo's navy color */
+  --color-white: #FFFFFF;  /* Logo's white color */
+
+  /* Secondary Colors - Derived from primary colors */
+  --color-navy-light: #2F3E4F;
+  --color-navy-dark: #1A2530;
+  --color-coral-light: #FF7B6E;
+  --color-coral-dark: #D14438;
+  
+  /* Gradients - Based on logo colors */
+  --gradient-coral: linear-gradient(135deg, var(--color-coral) 0%, var(--color-coral-light) 100%);
+  --gradient-navy: linear-gradient(135deg, var(--color-navy) 0%, var(--color-navy-light) 100%);
+  --gradient-accent: linear-gradient(45deg, var(--color-coral) 0%, var(--color-navy) 100%);
+  
+  /* Gray Scale - Derived from navy */
+  --color-gray-100: #F7F8F9;
+  --color-gray-200: #E9ECEF;
+  --color-gray-300: #DEE2E6;
+  --color-gray-400: #CED4DA;
+  --color-gray-500: #ADB5BD;
+  --color-gray-600: #6C757D;
+  --color-gray-700: #495057;
+  --color-gray-800: #343A40;
+  --color-gray-900: #212529;
+
+  /* Typography */
+  --font-primary: 'Poppins', sans-serif;  /* Same as logo font */
+  --font-secondary: 'Inter', sans-serif;
+  
+  /* Font Sizes */
+  --font-size-xs: 0.75rem;    /* 12px */
+  --font-size-sm: 0.875rem;   /* 14px */
+  --font-size-base: 1rem;     /* 16px */
+  --font-size-lg: 1.125rem;   /* 18px */
+  --font-size-xl: 1.25rem;    /* 20px */
+  --font-size-2xl: 1.5rem;    /* 24px */
+  --font-size-3xl: 2rem;      /* 32px */
+  --font-size-4xl: 2.5rem;    /* 40px */
+  --font-size-5xl: 3rem;      /* 48px */
+  
+  /* Spacing */
+  --spacing-xs: 0.25rem;      /* 4px */
+  --spacing-sm: 0.5rem;       /* 8px */
+  --spacing-md: 1rem;         /* 16px */
+  --spacing-lg: 1.5rem;       /* 24px */
+  --spacing-xl: 2rem;         /* 32px */
+  --spacing-2xl: 3rem;        /* 48px */
+  --spacing-3xl: 4rem;        /* 64px */
+  
+  /* Border Radius - Matching logo's rounded elements */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+  
+  /* Shadows */
+  --shadow-sm: 0 2px 4px rgba(35, 47, 62, 0.05);
+  --shadow-md: 0 4px 6px rgba(35, 47, 62, 0.1);
+  --shadow-lg: 0 10px 15px rgba(35, 47, 62, 0.1);
+  --shadow-xl: 0 20px 25px rgba(35, 47, 62, 0.15);
+  
+  /* Transitions */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Z-index */
+  --z-negative: -1;
+  --z-elevate: 1;
+  --z-sticky: 100;
+  --z-drawer: 200;
+  --z-modal: 300;
+  --z-popover: 400;
+  --z-maximum: 999;
+}
+
+/* Dark Mode - Using logo's navy as background */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-primary: var(--color-navy);
+    --bg-secondary: var(--color-navy-light);
+    --bg-tertiary: var(--color-navy-dark);
+    --text-primary: var(--color-white);
+    --text-secondary: var(--color-gray-300);
+    --text-tertiary: var(--color-gray-400);
+    --border-color: var(--color-navy-light);
+    --shadow-color: rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* Light Mode - Clean white background like logo */
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg-primary: var(--color-white);
+    --bg-secondary: var(--color-gray-100);
+    --bg-tertiary: var(--color-gray-200);
+    --text-primary: var(--color-navy);
+    --text-secondary: var(--color-navy-light);
+    --text-tertiary: var(--color-gray-600);
+    --border-color: var(--color-gray-200);
+    --shadow-color: rgba(35, 47, 62, 0.1);
+  }
+} 
