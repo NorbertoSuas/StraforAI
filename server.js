@@ -237,6 +237,11 @@ app.post('/api/vacancies', async (req, res) => {
             return !req.body[field];
         });
         
+        // Additional check for skills_required being a non-empty array
+        if (!Array.isArray(req.body.skills_required) || req.body.skills_required.length === 0 || req.body.skills_required.every(skill => !skill.trim())) {
+            missingFields.push('skills_required');
+        }
+        
         if (missingFields.length > 0) {
             return res.status(400).json({ 
                 error: 'Missing required fields', 
@@ -290,50 +295,51 @@ app.post('/api/vacancies', async (req, res) => {
 // Get top candidates for a specific vacancy
 app.get('/api/vacancies/:id/top-candidates', async (req, res) => {
     try {
-        console.log(`Fetching top candidates for vacancy: ${req.params.id}`);
-        
         if (mongoose.connection.readyState !== 1) {
             throw new Error('MongoDB is not connected. Please try again later.');
         }
 
-        // Get the vacancy details
         const vacancy = await Vacancy.findById(req.params.id);
         if (!vacancy) {
             return res.status(404).json({ error: 'Vacancy not found' });
         }
 
-        // Get all candidates for this vacancy
         const candidates = await Candidate.find({ 
             applied_for: req.params.id
         });
 
-        console.log(`Found ${candidates.length} candidates for vacancy`);
-
         // Initialize the AI model
         const matcher = new CandidateMatcher();
-        
+
         // Calculate match scores for all candidates
         const candidatesWithScores = await Promise.all(candidates.map(async (candidate) => {
-            const matchResult = await matcher.match_candidate(
-                {
-                    id: candidate._id,
-                    description: candidate.current_position,
-                    skills: candidate.skills,
-                    experience: candidate.experience.toString(),
-                    education: candidate.education
-                },
-                {
-                    id: vacancy._id,
-                    description: vacancy.description,
-                    skills: vacancy.skills_required.join(', '),
-                    experience: vacancy.experience_level,
-                    education: vacancy.requirements
+            let match_score = 0;
+            try {
+                const matchResult = await matcher.match_candidate(
+                    {
+                        id: candidate._id,
+                        description: candidate.current_position || '',
+                        skills: candidate.skills || '',
+                        experience: candidate.experience ? candidate.experience.toString() : '',
+                        education: candidate.education || ''
+                    },
+                    {
+                        id: vacancy._id,
+                        description: vacancy.description || '',
+                        skills: Array.isArray(vacancy.skills_required) ? vacancy.skills_required.join(', ') : '',
+                        experience: vacancy.experience_level || '',
+                        education: vacancy.requirements || ''
+                    }
+                );
+                if (typeof matchResult.match_score === 'number' && !isNaN(matchResult.match_score)) {
+                    match_score = matchResult.match_score;
                 }
-            );
-
+            } catch (e) {
+                match_score = 0;
+            }
             return {
                 ...candidate.toObject(),
-                match_score: matchResult.match_score
+                match_score
             };
         }));
 
@@ -344,14 +350,9 @@ app.get('/api/vacancies/:id/top-candidates', async (req, res) => {
         const topCount = Math.ceil(candidatesWithScores.length * 0.3);
         const topCandidates = candidatesWithScores.slice(0, topCount);
 
-        console.log(`Successfully fetched top ${topCandidates.length} candidates for vacancy ${req.params.id}`);
         res.json(topCandidates);
     } catch (err) {
-        console.error('Error fetching top candidates for vacancy:', err);
-        res.status(500).json({ 
-            error: 'Error fetching top candidates',
-            details: err.message 
-        });
+        res.status(500).json({ error: 'Error fetching top candidates', details: err.message });
     }
 });
 
@@ -362,16 +363,69 @@ app.get('/api/vacancies/:id/candidates', async (req, res) => {
             throw new Error('MongoDB is not connected. Please try again later.');
         }
 
-        const candidates = await Candidate.find({ 
-            applied_for: req.params.id
-        })
-        .select('first_name last_name email phone linkedin experience skills status resume')
-        .populate('applied_for', 'title');
+        const { id } = req.params;
+        
+        let candidates = await Candidate.find({ applied_for: id })
+            .select('first_name last_name email phone location linkedin experience skills status hiring_feedback feedback_timestamp resume ai_feedback_analysis education current_position')
+            .sort({ applied_at: -1 });
 
-        console.log(`Successfully fetched ${candidates.length} candidates for vacancy ${req.params.id}`);
-        res.json(candidates);
+        // Fetch the vacancy for AI analysis
+        const vacancy = await Vacancy.findById(id);
+        if (!vacancy) {
+            return res.status(404).json({ error: 'Vacancy not found' });
+        }
+
+        // Initialize the AI model
+        const matcher = new CandidateMatcher();
+        // Analyze and update candidates missing ai_feedback_analysis.match_score
+        for (const candidate of candidates) {
+            if (!candidate.ai_feedback_analysis || typeof candidate.ai_feedback_analysis.match_score !== 'number') {
+                try {
+                    const matchResult = matcher.match_candidate(
+                        {
+                            id: candidate._id,
+                            description: candidate.current_position || '',
+                            skills: candidate.skills || '',
+                            experience: candidate.experience ? candidate.experience.toString() : '',
+                            education: candidate.education || ''
+                        },
+                        {
+                            id: vacancy._id,
+                            description: vacancy.description || '',
+                            skills: Array.isArray(vacancy.skills_required) ? vacancy.skills_required.join(', ') : '',
+                            experience: vacancy.experience_level || '',
+                            education: vacancy.requirements || ''
+                        }
+                    );
+                    candidate.ai_feedback_analysis = {
+                        match_score: matchResult.match_score,
+                        match_level: matchResult.match_details.match_level,
+                        recommendation: matchResult.match_details.recommendation,
+                        summary: matchResult.match_details.summary || '',
+                        generated_at: new Date()
+                    };
+                    await candidate.save();
+                } catch (e) {
+                    // If AI analysis fails, skip and leave as is
+                    console.error(`AI analysis failed for candidate ${candidate._id}:`, e);
+                }
+            }
+        }
+
+        // Refetch candidates to include updated ai_feedback_analysis
+        candidates = await Candidate.find({ applied_for: id })
+            .select('first_name last_name email phone location linkedin experience skills status hiring_feedback feedback_timestamp resume ai_feedback_analysis education current_position')
+            .sort({ applied_at: -1 });
+
+        // Add feedback status information
+        const candidatesWithFeedbackStatus = candidates.map(candidate => ({
+            ...candidate.toObject(),
+            needs_feedback: candidate.status === 'accepted' && !candidate.hiring_feedback
+        }));
+
+        res.json(candidatesWithFeedbackStatus);
     } catch (err) {
-        console.error('Error fetching candidates for vacancy:', err);
+        console.error('Error fetching candidates:', err);
         res.status(500).json({ 
             error: 'Error fetching candidates',
             details: err.message 
@@ -415,7 +469,7 @@ app.get('/api/candidates', async (req, res) => {
 });
 
 // Create a new candidate
-app.post('/api/candidates', async (req, res) => {
+app.post('/api/candidates', upload.single('resume'), async (req, res) => {
     try {
         if (mongoose.connection.readyState !== 1) {
             throw new Error('MongoDB is not connected. Please try again later.');
@@ -434,8 +488,8 @@ app.post('/api/candidates', async (req, res) => {
             'applied_for'
         ];
 
+        // For multipart/form-data, fields are in req.body
         const missingFields = requiredFields.filter(field => !req.body[field]);
-        
         if (missingFields.length > 0) {
             return res.status(400).json({ 
                 error: 'Missing required fields', 
@@ -447,8 +501,12 @@ app.post('/api/candidates', async (req, res) => {
         // Create candidate data with applied_at date
         const candidateData = {
             ...req.body,
-            applied_at: req.body.applied_at ? new Date(req.body.applied_at) : new Date() // Use provided date or current date
+            applied_at: req.body.applied_at ? new Date(req.body.applied_at) : new Date()
         };
+        // If a file was uploaded, set resume to the filename
+        if (req.file) {
+            candidateData.resume = req.file.filename;
+        }
 
         // Create and save the new candidate
         const candidate = new Candidate(candidateData);
@@ -524,7 +582,18 @@ app.put('/api/candidates/:id/feedback', async (req, res) => {
             return res.status(400).json({ error: 'Hiring feedback is required' });
         }
 
-        const candidate = await Candidate.findByIdAndUpdate(
+        // First check if the candidate exists and is accepted
+        const candidate = await Candidate.findById(id);
+        if (!candidate) {
+            return res.status(404).json({ error: 'Candidate not found' });
+        }
+
+        if (candidate.status !== 'accepted') {
+            return res.status(400).json({ error: 'Feedback can only be provided for accepted candidates' });
+        }
+
+        // Update the candidate with feedback
+        const updatedCandidate = await Candidate.findByIdAndUpdate(
             id,
             { 
                 hiring_feedback, 
@@ -534,12 +603,8 @@ app.put('/api/candidates/:id/feedback', async (req, res) => {
             { new: true }
         ).populate('applied_for', 'title');
 
-        if (!candidate) {
-            return res.status(404).json({ error: 'Candidate not found' });
-        }
-
         console.log(`Successfully updated hiring feedback for candidate ${id}`);
-        res.json(candidate);
+        res.json(updatedCandidate);
     } catch (err) {
         console.error('Error updating candidate hiring feedback:', err);
         res.status(500).json({ 
@@ -633,23 +698,20 @@ app.post('/api/ai/process-feedback', async (req, res) => {
             });
         }
 
-        console.log('Processing feedback for:', { candidateId, vacancyId });
-
-        // Get candidate and vacancy data
+        // Verify candidate exists and is accepted
         const candidate = await Candidate.findById(candidateId);
-        const vacancy = await Vacancy.findById(vacancyId);
-
-        if (!candidate || !vacancy) {
-            return res.status(404).json({
-                error: 'Not found',
-                details: `${!candidate ? 'Candidate' : 'Vacancy'} not found`
-            });
+        if (!candidate) {
+            return res.status(404).json({ error: 'Candidate not found' });
         }
 
-        console.log('Found candidate and vacancy:', {
-            candidateName: `${candidate.first_name} ${candidate.last_name}`,
-            vacancyTitle: vacancy.title
-        });
+        if (candidate.status !== 'accepted') {
+            return res.status(400).json({ error: 'Feedback can only be processed for accepted candidates' });
+        }
+
+        const vacancy = await Vacancy.findById(vacancyId);
+        if (!vacancy) {
+            return res.status(404).json({ error: 'Vacancy not found' });
+        }
 
         try {
             // Initialize the AI model
@@ -659,7 +721,7 @@ app.post('/api/ai/process-feedback', async (req, res) => {
             const feedbackAnalysis = matcher.match_candidate(
                 {
                     id: candidate._id,
-                    description: feedback, // Use the feedback as the main description
+                    description: feedback,
                     skills: candidate.skills,
                     experience: candidate.experience.toString(),
                     education: candidate.education
@@ -673,8 +735,6 @@ app.post('/api/ai/process-feedback', async (req, res) => {
                 }
             );
 
-            console.log('AI analysis completed:', feedbackAnalysis);
-
             // Extract key insights from the feedback
             const insights = {
                 match_score: feedbackAnalysis.match_score,
@@ -682,7 +742,7 @@ app.post('/api/ai/process-feedback', async (req, res) => {
                 recommendation: feedbackAnalysis.match_details.recommendation,
                 summary: `Based on the hiring feedback, the candidate shows a ${feedbackAnalysis.match_details.match_level.toLowerCase()} (${Math.round(feedbackAnalysis.match_score * 100)}%) alignment with the position requirements. ${feedbackAnalysis.match_details.recommendation}.`,
                 timestamp: new Date(),
-                feedback: feedback // Store the original feedback
+                feedback: feedback
             };
 
             // Update candidate record with feedback insights
@@ -701,8 +761,6 @@ app.post('/api/ai/process-feedback', async (req, res) => {
             if (!updatedCandidate) {
                 throw new Error('Failed to update candidate with feedback analysis');
             }
-
-            console.log('Candidate updated with feedback analysis');
 
             res.json({ 
                 success: true,

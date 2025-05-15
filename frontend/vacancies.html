@@ -569,6 +569,11 @@
         [data-theme="dark"] .table td {
             border-color: rgba(255,255,255,0.07) !important;
         }
+        th:nth-child(5), td:nth-child(5) { /* Match Score column */
+            min-width: 120px;
+            font-size: 1.1em;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -930,7 +935,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="newCandidateForm">
+                    <form id="newCandidateForm" enctype="multipart/form-data">
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">First Name</label>
@@ -980,6 +985,10 @@
                                 <label class="form-label">Skills (comma-separated)</label>
                                 <input type="text" class="form-control" name="skills" required>
                             </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Upload Resume (PDF, DOC, DOCX)</label>
+                            <input type="file" class="form-control" name="resume" accept=".pdf,.doc,.docx">
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Vacancy</label>
@@ -1118,7 +1127,12 @@
         document.getElementById('newVacancyForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const formData = new FormData(e.target);
-            
+            // Validate required skills
+            const skills = formData.get('skills');
+            if (!skills || skills.trim() === '') {
+                alert('Please enter at least one required skill.');
+                return;
+            }
             // Combine country and city into location string
             const country = formData.get('country');
             const city = formData.get('city');
@@ -1416,7 +1430,7 @@
                     <tr>
                         <td>
                             <div class="d-flex align-items-center gap-2">
-                                <button class="btn btn-link p-0 text-decoration-none" onclick="showCandidateDetails(${JSON.stringify(candidate).replace(/"/g, '&quot;')})">
+                                <button class="btn btn-link p-0 text-decoration-none" onclick="showCandidateDetails(${JSON.stringify(candidate).replace(/\"/g, '&quot;')})">
                                     ${candidate.first_name} ${candidate.last_name}
                                 </button>
                                 ${candidate.status === 'accepted' && !candidate.hiring_feedback ? 
@@ -1427,11 +1441,7 @@
                         <td>${candidate.experience} years</td>
                         <td>${candidate.skills}</td>
                         <td>${candidate.email || 'N/A'}</td>
-                        <td>
-                            <span class="badge bg-${getStatusColor(candidate.status)}">
-                                ${candidate.status}
-                            </span>
-                        </td>
+                        <td><span class="badge bg-${getStatusColor(candidate.status)}">${candidate.status}</span></td>
                         <td>
                             <div class="d-flex gap-2">
                                 <button class="btn btn-sm btn-outline-primary" onclick="sendInterviewEmail('${candidate._id}', '${candidate.first_name}', '${candidate.last_name}', '${candidate.email}')">
@@ -1461,7 +1471,7 @@
             document.getElementById('candidateFullName').textContent = `${candidate.first_name} ${candidate.last_name}`;
             document.getElementById('candidateEmail').textContent = candidate.email || 'N/A';
             document.getElementById('candidatePhone').textContent = candidate.phone || 'N/A';
-            document.getElementById('candidateLocation').textContent = `${candidate.city || 'N/A'}, ${candidate.country || 'N/A'}`;
+            document.getElementById('candidateLocation').textContent = candidate.location || 'N/A';
             
             // Handle LinkedIn link
             const linkedInContainer = document.getElementById('candidateLinkedIn');
@@ -1480,16 +1490,24 @@
             document.getElementById('candidateEducation').textContent = candidate.education || 'N/A';
             document.getElementById('candidateSkills').textContent = candidate.skills || 'N/A';
             document.getElementById('candidateStatus').textContent = candidate.status || 'N/A';
-            document.getElementById('candidateMatchScore').textContent =
-                candidate.match_score !== undefined && candidate.match_score !== null
-                    ? `${Math.round(candidate.match_score * 100)}%`
-                    : 'N/A';
+            // Show AI Match Percentage
+            let matchScore = 'N/A';
+            if (candidate.ai_feedback_analysis && typeof candidate.ai_feedback_analysis.match_score === 'number') {
+                matchScore = `${Math.round(candidate.ai_feedback_analysis.match_score * 100)}%`;
+            }
+            document.getElementById('candidateMatchScore').textContent = matchScore;
+            document.getElementById('candidateMatchScore').previousElementSibling.textContent = 'AI Match Percentage:';
             
             // Handle resume link
             const resumeLinkContainer = document.getElementById('candidateResumeLink');
             if (candidate.resume) {
+                // If it's already a full URL, use it as is
+                let resumeUrl = candidate.resume;
+                if (!resumeUrl.startsWith('http')) {
+                    resumeUrl = `${API_BASE_URL}/resumes/${candidate.resume}`;
+                }
                 resumeLinkContainer.innerHTML = `
-                    <a href="#" onclick="viewResume('${candidate.resume}')" class="btn btn-outline-primary btn-sm">
+                    <a href="${resumeUrl}" target="_blank" class="btn btn-outline-primary btn-sm">
                         <i class="bi bi-file-earmark-text"></i> View Resume
                     </a>
                 `;
@@ -1569,21 +1587,20 @@ Tech Mahindra`;
             }
         }
 
-        // Modify checkAcceptedCandidatesFeedback to use currentVacancyCandidates
+        // Always check feedback status from the backend, never from local/cached data
         async function checkAcceptedCandidatesFeedback() {
             try {
-                // Fetch fresh data from the server for the current vacancy
+                // Always fetch fresh data from the backend (database)
                 const response = await fetch(`${API_BASE_URL}/api/vacancies/${currentVacancyId}/candidates`, {
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('token')}`
                     }
                 });
-                
                 if (!response.ok) {
                     throw new Error('Failed to fetch candidates');
                 }
-                
                 const candidates = await response.json();
+                // Only check hiring_feedback from backend response
                 const acceptedCandidates = candidates.filter(c => c.status === 'accepted');
                 const candidatesWithoutFeedback = acceptedCandidates.filter(c => !c.hiring_feedback);
                 return candidatesWithoutFeedback.length === 0;
@@ -1593,24 +1610,22 @@ Tech Mahindra`;
             }
         }
 
-        // Modify checkInitialFeedbackStatus to use the new modal
+        // When opening the feedback modal, always re-check from backend
         async function checkInitialFeedbackStatus() {
             try {
-                // Fetch fresh data from the server
+                // Always fetch fresh data from the backend (database)
                 const response = await fetch(`${API_BASE_URL}/api/vacancies/${currentVacancyId}/candidates`, {
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('token')}`
                     }
                 });
-                
                 if (!response.ok) {
                     throw new Error('Failed to fetch candidates');
                 }
-                
                 const candidates = await response.json();
+                // Only check hiring_feedback from backend response
                 const acceptedCandidates = candidates.filter(c => c.status === 'accepted');
                 const candidateWithoutFeedback = acceptedCandidates.find(c => !c.hiring_feedback);
-                
                 if (candidateWithoutFeedback) {
                     showHiringFeedbackModal(
                         candidateWithoutFeedback._id,
@@ -1726,7 +1741,15 @@ Tech Mahindra`;
                 const aiResult = await aiResponse.json();
                 console.log('AI feedback response:', aiResult);
 
-                // Fetch fresh candidate data for the current vacancy
+                // Close the modal and reset the form
+                const feedbackModal = bootstrap.Modal.getInstance(document.getElementById('hiringFeedbackModal'));
+                feedbackModal.hide();
+                textarea.value = '';
+
+                // Show success message
+                showToast('Feedback submitted successfully!', 'success');
+
+                // Refresh the candidates list to update the UI
                 const candidatesResponse = await fetch(`${API_BASE_URL}/api/vacancies/${currentVacancyId}/candidates`, {
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -1738,22 +1761,11 @@ Tech Mahindra`;
                 }
 
                 const candidates = await candidatesResponse.json();
-                console.log('Updated candidates list after feedback:', candidates);
                 currentVacancyCandidates = candidates;
-
-                // Update the candidates list display
                 displayCandidates(candidates);
 
-                // Update the feedback badge
-                updateFeedbackBadge();
-
-                // Close the modal and reset the form
-                const feedbackModal = bootstrap.Modal.getInstance(document.getElementById('hiringFeedbackModal'));
-                feedbackModal.hide();
-                textarea.value = '';
-
-                // Show success message
-                showToast('Feedback submitted successfully!', 'success');
+                // Check if there are more pending feedbacks
+                await checkPendingFeedbacks();
 
             } catch (error) {
                 console.error('Error submitting feedback:', error);
@@ -2062,6 +2074,81 @@ Tech Mahindra`;
             });
         }
 
+        // Function to check for pending feedbacks
+        async function checkPendingFeedbacks() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/vacancies/${currentVacancyId}/candidates`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to fetch candidates');
+                }
+                
+                const candidates = await response.json();
+                const acceptedCandidates = candidates.filter(c => c.status === 'accepted');
+                const candidatesWithoutFeedback = acceptedCandidates.filter(c => !c.hiring_feedback);
+                
+                if (candidatesWithoutFeedback.length > 0) {
+                    const candidate = candidatesWithoutFeedback[0];
+                    showHiringFeedbackModal(
+                        candidate._id,
+                        candidate.first_name,
+                        candidate.last_name
+                    );
+                    return true;
+                }
+                return false;
+            } catch (error) {
+                console.error('Error checking pending feedbacks:', error);
+                return false;
+            }
+        }
+
+        // Update the hireCandidate function to check for feedback after hiring
+        async function hireCandidate(candidateId, firstName, lastName, email) {
+            try {
+                const success = await updateCandidateStatus(candidateId, 'Accepted');
+                if (success) {
+                    // Check for pending feedbacks after successful hiring
+                    await checkPendingFeedbacks();
+                }
+            } catch (error) {
+                console.error('Error in hireCandidate:', error);
+                alert(`Failed to hire candidate: ${error.message}`);
+            }
+        }
+
+        // Update the updateFeedbackBadge function
+        async function updateFeedbackBadge() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/vacancies/${currentVacancyId}/candidates`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to fetch candidates');
+                }
+                
+                const candidates = await response.json();
+                const pendingCount = candidates.filter(c => c.status === 'accepted' && !c.hiring_feedback).length;
+                const badge = document.getElementById('feedbackBadge');
+                
+                if (pendingCount > 0) {
+                    badge.textContent = pendingCount;
+                    badge.style.display = 'block';
+                } else {
+                    badge.style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Error updating feedback badge:', error);
+            }
+        }
+
         // Add CSS for all custom styles
         const style = document.createElement('style');
         style.textContent = `
@@ -2338,17 +2425,16 @@ Tech Mahindra`;
         candidateForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const formData = new FormData(candidateForm);
-            const data = Object.fromEntries(formData.entries());
             // Combine country and city into location
-            data.location = `${data.city} - ${data.country}`;
-            // Remove city and country fields from payload
-            delete data.city;
-            delete data.country;
+            const country = formData.get('country');
+            const city = formData.get('city');
+            formData.set('location', `${city} - ${country}`);
+            formData.delete('city');
+            formData.delete('country');
             try {
                 const response = await fetch(`${API_BASE_URL}/api/candidates`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
+                    body: formData
                 });
                 if (!response.ok) {
                     const errorData = await response.json();
@@ -2363,6 +2449,53 @@ Tech Mahindra`;
                 console.error(error);
             }
         });
+
+        // --- FEEDBACK STATUS LOGIC: DATABASE-ONLY CHECK ---
+        // Always fetches from backend, never uses local/global cache for feedback checks
+        async function getAcceptedCandidatesWithoutFeedback() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/vacancies/${currentVacancyId}/candidates`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                if (!response.ok) throw new Error('Failed to fetch candidates');
+                const candidates = await response.json();
+                // Debug: log all accepted candidates and their feedback
+                const accepted = candidates.filter(c => c.status === 'accepted');
+                console.log('Accepted candidates from DB:', accepted.map(c => ({name: c.first_name + ' ' + c.last_name, hiring_feedback: c.hiring_feedback})));
+                // Only accepted candidates without hiring_feedback
+                return accepted.filter(c => !c.hiring_feedback);
+            } catch (error) {
+                console.error('Error fetching candidates for feedback check:', error);
+                return [];
+            }
+        }
+
+        // Call this to check and show feedback modal if needed
+        async function checkAndPromptForFeedback() {
+            const pending = await getAcceptedCandidatesWithoutFeedback();
+            if (pending.length > 0) {
+                const c = pending[0];
+                showHiringFeedbackModal(c._id, c.first_name, c.last_name);
+            }
+        }
+
+        // After feedback is submitted, always re-check from backend
+        async function afterFeedbackSubmitted() {
+            // Now re-check for any remaining feedbacks
+            const pending = await getAcceptedCandidatesWithoutFeedback();
+            if (pending.length > 0) {
+                // Show for next candidate
+                const c = pending[0];
+                showHiringFeedbackModal(c._id, c.first_name, c.last_name);
+            } else {
+                // Debug: confirm no more pending feedbacks
+                console.log('All feedback submitted. No more feedback modals will appear.');
+            }
+        }
+        // --- END FEEDBACK STATUS LOGIC: DATABASE-ONLY CHECK ---
+        // Comments: This logic always checks the database via backend API. The modal will never reappear for a candidate who already has feedback stored in the database. Debug logs are included for troubleshooting.
     </script>
 </body>
 </html> 

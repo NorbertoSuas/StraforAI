@@ -75,6 +75,7 @@ function Candidates() {
     vacancy: '',
     notes: ''
   });
+  const [resumeFile, setResumeFile] = useState(null);
 
   useEffect(() => {
     fetchCandidates();
@@ -99,7 +100,18 @@ function Candidates() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('/api/candidates', formData);
+      const data = new FormData();
+      Object.entries(formData).forEach(([key, value]) => {
+        data.append(key, value);
+      });
+      if (resumeFile) {
+        data.append('resume', resumeFile);
+      }
+      await axios.post('/api/candidates', data, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
       setShowForm(false);
       setFormData({
         firstName: '',
@@ -115,6 +127,7 @@ function Candidates() {
         vacancy: '',
         notes: ''
       });
+      setResumeFile(null);
       fetchCandidates();
       setSnackbar({
         open: true,
@@ -154,6 +167,10 @@ function Candidates() {
         severity: 'error'
       });
     }
+  };
+
+  const handleFileChange = (e) => {
+    setResumeFile(e.target.files[0]);
   };
 
   const filteredCandidates = candidates.filter(candidate => {
@@ -333,6 +350,22 @@ function Candidates() {
                       value={formData.notes}
                       onChange={handleInputChange}
                     />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Button
+                      variant="contained"
+                      component="label"
+                      color={resumeFile ? 'success' : 'primary'}
+                      sx={{ mb: 2 }}
+                    >
+                      {resumeFile ? `File: ${resumeFile.name}` : 'Upload Resume (PDF, DOC, DOCX)'}
+                      <input
+                        type="file"
+                        accept=".pdf,.doc,.docx"
+                        hidden
+                        onChange={handleFileChange}
+                      />
+                    </Button>
                   </Grid>
                   <Grid item xs={12}>
                     <Box display="flex" gap={2}>
