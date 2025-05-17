@@ -12,7 +12,7 @@ app.use(express.static(path.join(__dirname, '..', 'frontend')));
 
 // Update the catch-all route path
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'frontend', 'index.html'));
+    res.sendFile(path.join(__dirname, '..', 'frontend', 'dashboard.html'));
 });
 
 // Rest of your server code... 

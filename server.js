@@ -783,6 +783,140 @@ app.post('/api/ai/process-feedback', async (req, res) => {
     }
 });
 
+// Analytics endpoints
+app.get('/api/dashboard/application-trends', async (req, res) => {
+    try {
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+        const candidates = await Candidate.find({
+            applied_at: { $gte: thirtyDaysAgo }
+        }).sort({ applied_at: 1 });
+
+        // Group applications by date
+        const applicationsByDate = {};
+        candidates.forEach(candidate => {
+            const date = candidate.applied_at.toISOString().split('T')[0];
+            if (!applicationsByDate[date]) {
+                applicationsByDate[date] = {
+                    applications: 0,
+                    interviews: 0
+                };
+            }
+            applicationsByDate[date].applications++;
+            if (candidate.status === 'interview') {
+                applicationsByDate[date].interviews++;
+            }
+        });
+
+        // Convert to array format for the chart
+        const trends = Object.entries(applicationsByDate).map(([date, data]) => ({
+            date,
+            ...data
+        }));
+
+        res.json(trends);
+    } catch (error) {
+        console.error('Error fetching application trends:', error);
+        res.status(500).json({ error: 'Error fetching application trends' });
+    }
+});
+
+app.get('/api/dashboard/department-stats', async (req, res) => {
+    try {
+        const vacancies = await Vacancy.find();
+        const departmentStats = {};
+
+        // Count applications by department
+        for (const vacancy of vacancies) {
+            const candidates = await Candidate.countDocuments({ applied_for: vacancy._id });
+            if (!departmentStats[vacancy.department]) {
+                departmentStats[vacancy.department] = 0;
+            }
+            departmentStats[vacancy.department] += candidates;
+        }
+
+        // Convert to array format for the pie chart
+        const stats = Object.entries(departmentStats).map(([name, value]) => ({
+            name,
+            value
+        }));
+
+        res.json(stats);
+    } catch (error) {
+        console.error('Error fetching department stats:', error);
+        res.status(500).json({ error: 'Error fetching department stats' });
+    }
+});
+
+// Report generation endpoint
+app.get('/api/dashboard/generate-report', async (req, res) => {
+    try {
+        const PDFDocument = require('pdfkit');
+        const doc = new PDFDocument();
+
+        // Set response headers
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', 'attachment; filename=recruitment-report.pdf');
+
+        // Pipe the PDF to the response
+        doc.pipe(res);
+
+        // Add content to the PDF
+        doc.fontSize(25).text('Recruitment Report', { align: 'center' });
+        doc.moveDown();
+
+        // Get statistics
+        const totalVacancies = await Vacancy.countDocuments();
+        const activeVacancies = await Vacancy.countDocuments({ status: 'Active' });
+        const totalCandidates = await Candidate.countDocuments();
+        const interviewedCandidates = await Candidate.countDocuments({ status: 'interview' });
+        const hiredCandidates = await Candidate.countDocuments({ status: 'accepted' });
+
+        // Add statistics to the report
+        doc.fontSize(16).text('Overview', { underline: true });
+        doc.moveDown();
+        doc.fontSize(12).text(`Total Vacancies: ${totalVacancies}`);
+        doc.text(`Active Vacancies: ${activeVacancies}`);
+        doc.text(`Total Candidates: ${totalCandidates}`);
+        doc.text(`Interviewed Candidates: ${interviewedCandidates}`);
+        doc.text(`Hired Candidates: ${hiredCandidates}`);
+        doc.moveDown();
+
+        // Add department statistics
+        doc.fontSize(16).text('Department Statistics', { underline: true });
+        doc.moveDown();
+
+        const vacancies = await Vacancy.find();
+        for (const vacancy of vacancies) {
+            const candidates = await Candidate.countDocuments({ applied_for: vacancy._id });
+            doc.fontSize(12).text(`${vacancy.department}: ${candidates} applications`);
+        }
+
+        // Add recent activity
+        doc.moveDown();
+        doc.fontSize(16).text('Recent Activity', { underline: true });
+        doc.moveDown();
+
+        const recentCandidates = await Candidate.find()
+            .sort({ applied_at: -1 })
+            .limit(10)
+            .populate('applied_for');
+
+        for (const candidate of recentCandidates) {
+            doc.fontSize(12).text(
+                `${candidate.first_name} ${candidate.last_name} applied for ${candidate.applied_for.title} on ${candidate.applied_at.toLocaleDateString()}`
+            );
+        }
+
+        // Finalize the PDF
+        doc.end();
+    } catch (error) {
+        console.error('Error generating report:', error);
+        res.status(500).json({ error: 'Error generating report' });
+    }
+});
+
 // Other API endpoints...
 
 // Serve static files AFTER all API routes
@@ -793,7 +927,7 @@ app.get('*', (req, res, next) => {
     if (req.path.endsWith('.html')) {
         next();
     } else {
-        res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
+        res.sendFile(path.join(__dirname, 'frontend', 'dashboard.html'));
     }
 });
 

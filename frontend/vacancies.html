@@ -584,7 +584,7 @@
                 <img src="assets/ChatGPT-Image-3-may-2025_-00_45_24.svg" alt="STRAFOR.AI Logo">
             </div>
             <ul class="sidebar-nav">
-                <li><a href="index.html"><i class="bi bi-speedometer2"></i>Dashboard</a></li>
+                <li><a href="dashboard.html"><i class="bi bi-speedometer2"></i>Dashboard</a></li>
                 <li><a href="vacancies.html" class="active"><i class="bi bi-briefcase"></i>Vacancies</a></li>
                 <li><a href="settings.html"><i class="bi bi-gear"></i>Settings</a></li>
                 <li><a href="#" onclick="logout()"><i class="bi bi-box-arrow-right"></i>Logout</a></li>
@@ -742,14 +742,8 @@
                             </div>
                         </div>
                         <div class="mb-3">
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input" name="postToLinkedIn" id="postToLinkedIn">
-                                <label class="form-check-label" for="postToLinkedIn">Post to LinkedIn</label>
-                            </div>
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input" name="postToOCC" id="postToOCC">
-                                <label class="form-check-label" for="postToOCC">Post to OCC Mundial</label>
-                            </div>
+                            <!-- Removed LinkedIn and OCC posting options -->
+                            <div class="alert alert-info">Vacancy will be posted only on the Careers page.</div>
                         </div>
                         <div class="d-flex gap-2">
                             <button type="submit" class="btn btn-primary">
@@ -821,7 +815,6 @@
                             <thead>
                                 <tr>
                                     <th>Name</th>
-                                    <th>Experience</th>
                                     <th>Skills</th>
                                     <th>Contact Information</th>
                                     <th>Status</th>
@@ -1156,10 +1149,7 @@
                 benefits: formData.get('benefits') ? formData.get('benefits').split(',').map(benefit => benefit.trim()) : [],
                 application_deadline: formData.get('deadline'),
                 remote_option: formData.get('remoteWork') === 'on',
-                external_postings: {
-                    linkedin: formData.get('postToLinkedIn') === 'on',
-                    occ: formData.get('postToOCC') === 'on'
-                }
+                external_postings: undefined // Remove LinkedIn/OCC posting logic
             };
 
             try {
@@ -1438,7 +1428,6 @@
                                     ''}
                             </div>
                         </td>
-                        <td>${candidate.experience} years</td>
                         <td>${candidate.skills}</td>
                         <td>${candidate.email || 'N/A'}</td>
                         <td><span class="badge bg-${getStatusColor(candidate.status)}">${candidate.status}</span></td>
@@ -2012,8 +2001,11 @@ Tech Mahindra`;
                 // Open email client with pre-filled hiring template
                 const mailtoLink = `mailto:${email}?subject=Job Offer - Tech Mahindra&body=${encodeURIComponent(emailTemplate)}`;
                 window.location.href = mailtoLink;
+
+                // Check for pending feedbacks after successful hiring
+                await checkPendingFeedbacks();
             } catch (error) {
-                console.error('Error hiring candidate:', error);
+                console.error('Error in hireCandidate:', error);
                 alert(`Failed to hire candidate: ${error.message}`);
             }
         }
@@ -2109,12 +2101,38 @@ Tech Mahindra`;
 
         // Update the hireCandidate function to check for feedback after hiring
         async function hireCandidate(candidateId, firstName, lastName, email) {
+            if (!confirm(`Are you sure you want to hire ${firstName} ${lastName}?`)) {
+                return;
+            }
+
             try {
+                // Update candidate status to Accepted
                 const success = await updateCandidateStatus(candidateId, 'Accepted');
-                if (success) {
-                    // Check for pending feedbacks after successful hiring
-                    await checkPendingFeedbacks();
+                if (!success) {
+                    return;
                 }
+
+                // Prepare hiring email
+                const emailTemplate = `Dear ${firstName} ${lastName},
+
+We are pleased to inform you that after careful consideration of your application and interview, we would like to offer you the position at Tech Mahindra.
+
+We were impressed with your qualifications and believe you will be a valuable addition to our team. We look forward to having you join us and contribute to our company's success.
+
+Please review the attached offer letter for details regarding your position, compensation, and start date. If you have any questions or need clarification, feel free to reach out to us.
+
+We are excited to welcome you to the Tech Mahindra family!
+
+Best regards,
+[Your Full Name]
+Tech Mahindra`;
+
+                // Open email client with pre-filled hiring template
+                const mailtoLink = `mailto:${email}?subject=Job Offer - Tech Mahindra&body=${encodeURIComponent(emailTemplate)}`;
+                window.location.href = mailtoLink;
+
+                // Check for pending feedbacks after successful hiring
+                await checkPendingFeedbacks();
             } catch (error) {
                 console.error('Error in hireCandidate:', error);
                 alert(`Failed to hire candidate: ${error.message}`);

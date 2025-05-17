@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Careers - STRAFOR.AI</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --strafor-red: #E74C3C;
+            --strafor-blue: #23313C;
+            --strafor-light: #f5f7fa;
+            --accent-color: #4a6cf7;
+            --success-color: #198754;
+            --bg-primary: rgba(255,255,255,0.75);
+            --bg-glass: rgba(255,255,255,0.35);
+            --bg-primary-rgb: 255, 255, 255;
+            --bg-secondary: #f5f7fa;
+            --text-primary: #23313C;
+            --text-secondary: #6c757d;
+            --border-color: #e1e1e1;
+            --input-bg: #fff;
+            --input-text: #23313C;
+            --card-shadow: 0 8px 24px rgba(35, 49, 60, 0.08);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            font-family: 'Inter', 'Poppins', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            color: var(--text-primary);
+            background: linear-gradient(120deg, #f5f7fa 0%, #e9ecef 100%);
+        }
+
+        #video-background {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -2;
+            object-fit: cover;
+            transition: transform 30s linear;
+            will-change: transform;
+        }
+
+        .video-zoom {
+            animation: slowZoom 60s infinite alternate linear;
+        }
+
+        @keyframes slowZoom {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.08); }
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.55);
+            z-index: -1;
+        }
+
+        .header-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 320px;
+            background: rgba(0,0,0,0.45);
+            z-index: 1;
+        }
+
+        .career-page {
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .career-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 3rem 0 2rem 0;
+            position: relative;
+        }
+
+        .career-header h1 {
+            font-family: 'Poppins', 'Inter', sans-serif;
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 1rem;
+            letter-spacing: 1px;
+            z-index: 2;
+            position: relative;
+        }
+
+        .career-header p {
+            font-size: 1.15rem;
+            color: #e0e0e0;
+            max-width: 600px;
+            margin: 0 auto;
+            z-index: 2;
+            position: relative;
+        }
+
+        .search-container {
+            max-width: 600px;
+            margin: 2rem auto 3rem auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            border-radius: 16px;
+            border: 2px solid var(--border-color);
+            font-size: 1.08rem;
+            background-color: var(--input-bg);
+            color: var(--input-text);
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 0.2rem rgba(74, 108, 247, 0.18);
+        }
+
+        .search-input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .row.g-4 {
+            justify-content: center;
+        }
+
+        .vacancy-card {
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(26,42,56,0.10), 0 1.5px 8px rgba(74, 108, 247, 0.08);
+            margin: 0 auto 2.5rem auto;
+            position: relative;
+            overflow: hidden;
+            border: 1.5px solid var(--border-color);
+            transition: box-shadow 0.3s, transform 0.3s;
+            min-width: 340px;
+            max-width: 540px;
+            min-height: 480px;
+            width: 100%;
+        }
+
+        @keyframes fadeInUp {
+            0% { opacity: 0; transform: translateY(40px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .vacancy-card:hover {
+            box-shadow: 0 16px 48px rgba(74, 108, 247, 0.18), 0 8px 32px rgba(26,42,56,0.18);
+            transform: scale(1.025) translateY(-6px);
+        }
+
+        .vacancy-accent {
+            height: 6px;
+            width: 100%;
+            background: linear-gradient(90deg, var(--accent-color), var(--strafor-red));
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .vacancy-card .card-body {
+            padding: 2.7rem 2.2rem 2rem 2.2rem;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .vacancy-title {
+            font-family: 'Poppins', 'Inter', sans-serif;
+            font-size: 1.55rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.7rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .vacancy-title i {
+            font-size: 1.3rem;
+            color: var(--accent-color);
+        }
+
+        .vacancy-meta {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.7rem;
+            color: var(--text-secondary);
+            font-size: 1.01rem;
+            margin-bottom: 1.1rem;
+        }
+
+        .vacancy-meta span {
+            display: flex;
+            align-items: center;
+        }
+
+        .vacancy-meta i {
+            margin-right: 0.4rem;
+            color: var(--accent-color);
+        }
+
+        .divider {
+            width: 100%;
+            height: 1.5px;
+            background: linear-gradient(90deg, #e0e0e0, #f5f7fa 60%, #e0e0e0);
+            margin: 0.7rem 0 1.1rem 0;
+            border-radius: 2px;
+            opacity: 0.7;
+        }
+
+        .description-text {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1.2rem;
+            font-size: 1.08rem;
+            min-height: 3.5em;
+            max-height: 8em;
+            overflow: auto;
+        }
+
+        .section-header {
+            font-size: 1.08rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            margin-top: 1.1rem;
+        }
+
+        .benefits-list, .responsibilities-list {
+            margin-bottom: 1.1rem;
+            padding-left: 1.2em;
+            color: var(--text-secondary);
+            font-size: 1.01rem;
+        }
+
+        .skill-chip {
+            background: rgba(233, 30, 99, 0.13);
+            color: var(--strafor-red);
+            font-size: 0.97rem;
+            font-weight: 600;
+            padding: 0.45rem 1.15rem;
+            border-radius: 999px;
+            margin: 0.18rem 0.18rem 0.18rem 0;
+            display: inline-block;
+            box-shadow: 0 1px 4px rgba(233, 30, 99, 0.07);
+            letter-spacing: 0.01em;
+            transition: background 0.2s, color 0.2s, transform 0.2s;
+        }
+
+        .skill-chip:hover, .skill-chip:focus {
+            background: rgba(233, 30, 99, 0.22);
+            color: #fff;
+            outline: 2px solid var(--accent-color);
+            transform: scale(1.07);
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, var(--accent-color) 60%, var(--strafor-red) 100%);
+            border: none;
+            padding: 0.95rem 1.5rem;
+            font-weight: 700;
+            width: 100%;
+            border-radius: 12px;
+            font-size: 1.08rem;
+            color: #fff;
+            box-shadow: 0 4px 16px rgba(74, 108, 247, 0.13);
+            transition: all 0.3s cubic-bezier(.4,2,.6,1);
+            margin-top: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            outline: none;
+        }
+
+        .btn-primary:hover, .btn-primary:focus {
+            background: linear-gradient(90deg, var(--strafor-red) 0%, var(--accent-color) 100%);
+            box-shadow: 0 8px 32px rgba(74, 108, 247, 0.18);
+            transform: scale(1.03) translateY(-2px);
+            filter: brightness(1.08);
+            outline: 2px solid var(--accent-color);
+        }
+
+        .btn-primary:active {
+            filter: brightness(0.98);
+        }
+
+        .loading-spinner {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 60vh;
+        }
+
+        .alert {
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            margin: 1rem 0;
+            border: none;
+            box-shadow: var(--card-shadow);
+        }
+
+        .alert-danger {
+            background: rgba(231, 76, 60, 0.08);
+            color: var(--strafor-red);
+        }
+
+        .alert-info {
+            background: rgba(35, 49, 60, 0.08);
+            color: var(--strafor-blue);
+        }
+
+        @media (max-width: 1200px) {
+            .career-page {
+                padding: 1.2rem;
+            }
+            .vacancy-card {
+                max-width: 98vw;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .career-page {
+                padding: 0.5rem;
+            }
+            .career-header {
+                padding: 1.5rem 0 1rem 0;
+            }
+            .career-header h1 {
+                font-size: 2rem;
+            }
+            .vacancy-card {
+                min-width: 90vw;
+                max-width: 99vw;
+            }
+        }
+    </style>
+</head>
+<body>
+    <video id="video-background" autoplay muted loop class="video-zoom">
+        <source src="assets/video fondo.mp4" type="video/mp4">
+    </video>
+    <div class="overlay"></div>
+    <div class="header-overlay"></div>
+
+    <div class="career-page">
+        <div class="career-header">
+            <h1>Join Our Team</h1>
+            <p>Discover opportunities to shape the future of intelligence with STRAFOR.AI</p>
+            <div class="search-container">
+                <input type="text" class="search-input" id="searchInput" 
+                       placeholder="Search by job title, department, or location">
+            </div>
+        </div>
+
+        <div id="loadingSpinner" class="loading-spinner d-none">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+
+        <div id="errorAlert" class="alert alert-danger d-none" role="alert">
+            Error loading vacancies. Please try again later.
+        </div>
+
+        <div id="noResultsAlert" class="alert alert-info d-none" role="alert">
+            No vacancies found matching your search criteria.
+        </div>
+
+        <div class="row g-4" id="vacanciesContainer">
+            <!-- Vacancies will be dynamically loaded here -->
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // API Base URL - Fixed configuration
+        const API_BASE_URL = 'http://localhost:3000';
+
+        // Helper function for making API requests
+        async function makeAPIRequest(endpoint, options = {}) {
+            const defaultOptions = {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include',
+                mode: 'cors'
+            };
+
+            const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+                ...defaultOptions,
+                ...options
+            });
+
+            const contentType = response.headers.get('content-type');
+            if (contentType && contentType.includes('text/html')) {
+                throw new Error('Received HTML response instead of JSON. Please check if the API server is running and configured correctly.');
+            }
+
+            if (!response.ok) {
+                if (response.status === 404) {
+                    throw new Error('Endpoint not found. Please check if the API server is running at the correct URL.');
+                }
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.message || `Server returned ${response.status}: ${response.statusText}`);
+            }
+
+            return response.json();
+        }
+
+        // Function to fetch and display vacancies
+        async function loadVacancies() {
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            const errorAlert = document.getElementById('errorAlert');
+            const noResultsAlert = document.getElementById('noResultsAlert');
+            const container = document.getElementById('vacanciesContainer');
+
+            try {
+                loadingSpinner.classList.remove('d-none');
+                errorAlert.classList.add('d-none');
+                noResultsAlert.classList.add('d-none');
+
+                const data = await makeAPIRequest('/api/vacancies');
+                const activeVacancies = data.filter(v => v.status === 'Active');
+                
+                container.innerHTML = '';
+                if (activeVacancies.length === 0) {
+                    noResultsAlert.classList.remove('d-none');
+                } else {
+                    activeVacancies.forEach(vacancy => {
+                        const card = createVacancyCard(vacancy);
+                        container.appendChild(card);
+                    });
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                errorAlert.textContent = error.message;
+                errorAlert.classList.remove('d-none');
+            } finally {
+                loadingSpinner.classList.add('d-none');
+            }
+        }
+
+        // Function to create vacancy card
+        function createVacancyCard(vacancy) {
+            const col = document.createElement('div');
+            col.className = 'col-12 col-md-6 col-lg-4 d-flex align-items-stretch';
+
+            // Ensure responsibilities and benefits are arrays
+            let responsibilities = [];
+            if (Array.isArray(vacancy.responsibilities)) {
+                responsibilities = vacancy.responsibilities;
+            } else if (typeof vacancy.responsibilities === 'string' && vacancy.responsibilities.trim() !== '') {
+                responsibilities = vacancy.responsibilities.split(/\r?\n|,/).map(s => s.trim()).filter(Boolean);
+            }
+            let benefits = [];
+            if (Array.isArray(vacancy.benefits)) {
+                benefits = vacancy.benefits;
+            } else if (typeof vacancy.benefits === 'string' && vacancy.benefits.trim() !== '') {
+                benefits = vacancy.benefits.split(/\r?\n|,/).map(s => s.trim()).filter(Boolean);
+            }
+
+            col.innerHTML = `
+                <div class="vacancy-card" tabindex="0">
+                    <div class="vacancy-accent"></div>
+                    <div class="card-body">
+                        <h2 class="vacancy-title">
+                            <i class="bi bi-briefcase"></i> ${vacancy.title}
+                        </h2>
+                        <div class="vacancy-meta">
+                            <span><i class="bi bi-diagram-3"></i>${vacancy.department}</span>
+                            <span class="mx-2">|</span>
+                            <span><i class="bi bi-geo-alt"></i>${vacancy.location}</span>
+                            <span class="mx-2">|</span>
+                            <span><i class="bi bi-briefcase"></i>${vacancy.type}</span>
+                            <span class="mx-2">|</span>
+                            <span><i class="bi bi-currency-dollar"></i>${vacancy.salary_range.currency} ${vacancy.salary_range.min} - ${vacancy.salary_range.max}</span>
+                        </div>
+                        <div class="divider"></div>
+                        <p class="description-text">${vacancy.description || ''}</p>
+                        ${responsibilities.length ? `
+                            <div class="section-header">Responsibilities</div>
+                            <ul class="responsibilities-list">
+                                ${responsibilities.map(r => `<li>${r}</li>`).join('')}
+                            </ul>
+                        ` : ''}
+                        ${benefits.length ? `
+                            <div class="section-header">Benefits</div>
+                            <ul class="benefits-list">
+                                ${benefits.map(b => `<li>${b}</li>`).join('')}
+                            </ul>
+                        ` : ''}
+                        <div class="mb-3">
+                            ${vacancy.skills_required.map(skill => 
+                                `<span class="skill-chip" tabindex="0">${skill}</span>`
+                            ).join('')}
+                        </div>
+                        <a href="/apply/${vacancy._id}" class="btn btn-primary" tabindex="0">
+                            <i class="bi bi-arrow-right"></i> Apply Now
+                        </a>
+                    </div>
+                </div>
+            `;
+            return col;
+        }
+
+        // Search functionality
+        const searchInput = document.getElementById('searchInput');
+        searchInput.addEventListener('input', filterVacancies);
+
+        function filterVacancies() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const cards = document.querySelectorAll('.vacancy-card');
+            let hasResults = false;
+
+            cards.forEach(card => {
+                const title = card.querySelector('.vacancy-title').textContent.toLowerCase();
+                const dept = card.querySelector('.vacancy-meta:nth-of-type(1)').textContent.toLowerCase();
+                const loc = card.querySelector('.vacancy-meta:nth-of-type(2)').textContent.toLowerCase();
+                
+                const matches = title.includes(searchTerm) || 
+                              dept.includes(searchTerm) || 
+                              loc.includes(searchTerm);
+                
+                card.closest('.col-12').style.display = matches ? 'block' : 'none';
+                if (matches) hasResults = true;
+            });
+
+            document.getElementById('noResultsAlert').classList.toggle('d-none', hasResults);
+        }
+
+        // Load vacancies when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('video-background').classList.add('video-zoom');
+            loadVacancies();
+        });
+    </script>
+</body>
+</html> 

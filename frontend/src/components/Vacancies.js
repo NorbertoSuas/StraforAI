@@ -70,9 +70,7 @@ const Vacancies = () => {
     salaryMax: '',
     benefits: '',
     deadline: '',
-    remoteWork: false,
-    postToLinkedIn: false,
-    postToOCC: false
+    remoteWork: false
   });
 
   useEffect(() => {
@@ -126,9 +124,7 @@ const Vacancies = () => {
         salaryMax: '',
         benefits: '',
         deadline: '',
-        remoteWork: false,
-        postToLinkedIn: false,
-        postToOCC: false
+        remoteWork: false
       });
       fetchVacancies();
     } catch (err) {
@@ -424,26 +420,9 @@ const Vacancies = () => {
                     />
                   </Grid>
                   <Grid item xs={12}>
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          name="postToLinkedIn"
-                          checked={formData.postToLinkedIn}
-                          onChange={handleInputChange}
-                        />
-                      }
-                      label="Post to LinkedIn"
-                    />
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          name="postToOCC"
-                          checked={formData.postToOCC}
-                          onChange={handleInputChange}
-                        />
-                      }
-                      label="Post to OCC Mundial"
-                    />
+                    <Alert severity="info" sx={{ mb: 2 }}>
+                      Vacancy will be posted only on the Careers page.
+                    </Alert>
                   </Grid>
                   <Grid item xs={12}>
                     <Box sx={{ display: 'flex', gap: 2 }}>
@@ -476,9 +455,7 @@ const Vacancies = () => {
                             salaryMax: '',
                             benefits: '',
                             deadline: '',
-                            remoteWork: false,
-                            postToLinkedIn: false,
-                            postToOCC: false
+                            remoteWork: false
                           });
                         }}
                       >
