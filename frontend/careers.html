@@ -121,14 +121,12 @@
         }
 
         .filter-bar-floating {
-            position: sticky;
-            top: 2rem;
-            z-index: 10;
-            background: rgba(255,255,255,0.85);
-            backdrop-filter: blur(12px);
-            border-radius: 2rem;
-            box-shadow: 0 8px 32px rgba(35,49,60,0.13);
-            padding: 1.2rem 2rem;
+            position: static;
+            background: none;
+            backdrop-filter: none;
+            border-radius: 0;
+            box-shadow: none;
+            padding: 0 0 1.5rem 0;
             margin: 0 auto 2rem auto;
             max-width: 1100px;
             display: flex;
@@ -149,11 +147,12 @@
             align-items: center;
             background: #f7fafd;
             border-radius: 2rem;
-            padding: 0.2rem 1rem;
+            padding: 0.2rem 1.1rem;
             box-shadow: 0 1px 4px rgba(35,49,60,0.04);
-            min-width: 160px;
-            flex: 1 1 180px;
-            max-width: 260px;
+            min-width: 150px;
+            flex: 1 1 170px;
+            max-width: 240px;
+            height: 48px;
             transition: box-shadow 0.2s;
         }
         .filter-group:focus-within, .filter-group:hover {
@@ -170,12 +169,28 @@
             font-size: 1rem;
             outline: none;
             box-shadow: none;
-            min-width: 100px;
+            min-width: 80px;
             width: 100%;
+            height: 44px;
+            line-height: 44px;
+            padding: 0 0.5rem;
+        }
+        .form-select {
+            border-radius: 2rem;
+        }
+        .form-control {
+            border-radius: 2rem;
         }
         .search-group {
             min-width: 200px;
-            flex: 2 1 240px;
+            flex: 2 1 220px;
+        }
+        #salaryMinInput, #salaryMaxInput {
+            width: 70px;
+            height: 44px;
+            border-radius: 2rem;
+            padding: 0 0.5rem;
+            text-align: center;
         }
         .filter-actions {
             display: flex;
@@ -189,26 +204,36 @@
             color: #009fe3;
             border: 1.5px solid #009fe3;
             border-radius: 2rem;
-            padding: 0.5rem 1.2rem;
+            padding: 0 1.2rem;
+            height: 48px;
+            font-size: 1.1rem;
             transition: background 0.2s, color 0.2s;
             min-width: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .btn-light:hover {
             background: #009fe3;
             color: #fff;
         }
         .btn-primary {
-            background: #009fe3;
+            background: linear-gradient(90deg, #4a6cf7 0%, #e74c3c 100%);
             color: #fff;
             border: none;
             border-radius: 2rem;
-            padding: 0.5rem 1.2rem;
+            padding: 0 1.2rem;
+            height: 48px;
+            font-size: 1.1rem;
             font-weight: 600;
             transition: background 0.2s;
-            min-width: 120px;
+            min-width: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .btn-primary:hover {
-            background: #007bb8;
+            background: linear-gradient(90deg, #23313C 0%, #e74c3c 100%);
         }
         @media (max-width: 1100px) {
             .filter-bar-floating {
@@ -493,19 +518,9 @@
                         </div>
                         <div class="filter-group">
                             <span class="filter-icon"><i class="bi bi-currency-dollar"></i></span>
-                            <select id="salaryRangeSelect" class="form-select">
-                                <option value="">$1000+</option>
-                                <option value="0-50000">$0 - $50,000</option>
-                                <option value="50000-100000">$50,000 - $100,000</option>
-                                <option value="100000-150000">$100,000 - $150,000</option>
-                                <option value="150000+">$150,000+</option>
-                            </select>
-                        </div>
-                        <div class="filter-group">
-                            <span class="filter-icon"><i class="bi bi-stars"></i></span>
-                            <select id="skillsSelect" class="form-select" multiple>
-                                <option value="">Skills</option>
-                            </select>
+                            <input type="number" id="salaryMinInput" class="form-control" placeholder="Min" min="0" style="width: 80px; margin-right: 0.5rem;" />
+                            <span style="margin: 0 0.2rem; color: #aaa;">-</span>
+                            <input type="number" id="salaryMaxInput" class="form-control" placeholder="Max" min="0" style="width: 80px;" />
                         </div>
                         <div class="filter-group search-group">
                             <span class="filter-icon"><i class="bi bi-search"></i></span>
@@ -596,13 +611,8 @@
                     if (departmentSelect.value) params.append('department', departmentSelect.value);
                     if (locationSelect.value) params.append('location', locationSelect.value);
                     if (jobTypeSelect.value) params.append('type', jobTypeSelect.value);
-                    if (salaryRangeSelect.value) {
-                        const [min, max] = salaryRangeSelect.value.split('-');
-                        if (min) params.append('salaryMin', min);
-                        if (max && max !== '+') params.append('salaryMax', max);
-                    }
-                    const selectedSkills = Array.from(skillsSelect.selectedOptions).map(opt => opt.value).filter(Boolean);
-                    if (selectedSkills.length > 0) params.append('skills', selectedSkills.join(','));
+                    if (salaryMinInput.value) params.append('salaryMin', salaryMinInput.value);
+                    if (salaryMaxInput.value) params.append('salaryMax', salaryMaxInput.value);
                     if (searchInput.value.trim()) params.append('search', searchInput.value.trim());
                     query = '?' + params.toString();
                 }
@@ -615,7 +625,6 @@
                 const locations = Array.from(new Set(activeVacancies.map(v => v.location).filter(Boolean)));
                     const departments = Array.from(new Set(activeVacancies.map(v => v.department).filter(Boolean)));
                     const jobTypes = Array.from(new Set(activeVacancies.map(v => v.type).filter(Boolean)));
-                    const skills = Array.from(new Set(activeVacancies.flatMap(v => v.skills_required).filter(Boolean)));
 
                     locationSelect.innerHTML = '<option value="">All Locations</option>' +
                         locations.map(loc => `<option value="${loc}">${loc}</option>`).join('');
@@ -623,8 +632,6 @@
                         departments.map(dept => `<option value="${dept}">${dept}</option>`).join('');
                     jobTypeSelect.innerHTML = '<option value="">All Job Types</option>' +
                         jobTypes.map(type => `<option value="${type}">${type}</option>`).join('');
-                    skillsSelect.innerHTML = '<option value="">Select Skills</option>' +
-                        skills.map(skill => `<option value="${skill}">${skill}</option>`).join('');
                 }
 
                 container.innerHTML = '';
@@ -715,8 +722,8 @@
         const locationSelect = document.getElementById('locationSelect');
         const departmentSelect = document.getElementById('departmentSelect');
         const jobTypeSelect = document.getElementById('jobTypeSelect');
-        const salaryRangeSelect = document.getElementById('salaryRangeSelect');
-        const skillsSelect = document.getElementById('skillsSelect');
+        const salaryMinInput = document.getElementById('salaryMinInput');
+        const salaryMaxInput = document.getElementById('salaryMaxInput');
         const clearFiltersBtn = document.getElementById('clearFilters');
         const activeFiltersContainer = document.getElementById('activeFilters');
 
@@ -733,10 +740,17 @@
             if (locationSelect.value) filters.push({ type: 'location', value: locationSelect.value });
             if (departmentSelect.value) filters.push({ type: 'department', value: departmentSelect.value });
             if (jobTypeSelect.value) filters.push({ type: 'jobType', value: jobTypeSelect.value });
-            if (salaryRangeSelect.value) filters.push({ type: 'salary', value: salaryRangeSelect.value });
-            Array.from(skillsSelect.selectedOptions).forEach(option => {
-                if (option.value) filters.push({ type: 'skill', value: option.value });
-            });
+            if (salaryMinInput.value || salaryMaxInput.value) {
+                let salaryLabel = '';
+                if (salaryMinInput.value && salaryMaxInput.value) {
+                    salaryLabel = `$${salaryMinInput.value} - $${salaryMaxInput.value}`;
+                } else if (salaryMinInput.value) {
+                    salaryLabel = `Min $${salaryMinInput.value}`;
+                } else if (salaryMaxInput.value) {
+                    salaryLabel = `Max $${salaryMaxInput.value}`;
+                }
+                filters.push({ type: 'salary', value: salaryLabel });
+            }
 
             activeFiltersContainer.innerHTML = filters.map(filter => `
                 <div class="active-filter" data-type="${filter.type}" data-value="${filter.value}">
@@ -764,12 +778,8 @@
                             jobTypeSelect.value = '';
                             break;
                         case 'salary':
-                            salaryRangeSelect.value = '';
-                            break;
-                        case 'skill':
-                            Array.from(skillsSelect.options).forEach(option => {
-                                if (option.value === value) option.selected = false;
-                            });
+                            salaryMinInput.value = '';
+                            salaryMaxInput.value = '';
                             break;
                     }
                     loadVacancies(true);
@@ -783,15 +793,15 @@
         locationSelect.addEventListener('change', () => loadVacancies(true));
         departmentSelect.addEventListener('change', () => loadVacancies(true));
         jobTypeSelect.addEventListener('change', () => loadVacancies(true));
-        salaryRangeSelect.addEventListener('change', () => loadVacancies(true));
-        skillsSelect.addEventListener('change', () => loadVacancies(true));
+        salaryMinInput.addEventListener('input', () => loadVacancies(true));
+        salaryMaxInput.addEventListener('input', () => loadVacancies(true));
         clearFiltersBtn.addEventListener('click', () => {
             searchInput.value = '';
             locationSelect.value = '';
             departmentSelect.value = '';
             jobTypeSelect.value = '';
-            salaryRangeSelect.value = '';
-            Array.from(skillsSelect.options).forEach(option => option.selected = false);
+            salaryMinInput.value = '';
+            salaryMaxInput.value = '';
             loadVacancies(true);
         });
 

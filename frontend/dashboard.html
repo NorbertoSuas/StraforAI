@@ -215,7 +215,19 @@
             </div>
             <ul class="sidebar-nav">
                 <li><a href="dashboard.html" class="active" data-i18n="dashboard"><i class="bi bi-speedometer2"></i>Dashboard</a></li>
+                <!-- Employee Management -->
+                <li><a href="employees.html" data-i18n="employees"><i class="bi bi-people"></i>Employees</a></li>
+                <li><a href="attendance.html" data-i18n="attendance"><i class="bi bi-calendar-check"></i>Attendance</a></li>
+                <li><a href="leave.html" data-i18n="leave"><i class="bi bi-calendar-minus"></i>Leave Management</a></li>
+                <!-- Recruitment -->
                 <li><a href="vacancies.html" data-i18n="vacancies"><i class="bi bi-briefcase"></i>Vacancies</a></li>
+                <!-- Performance -->
+                <li><a href="performance.html" data-i18n="performance"><i class="bi bi-graph-up"></i>Performance</a></li>
+                <li><a href="training.html" data-i18n="training"><i class="bi bi-mortarboard"></i>Training</a></li>
+                <!-- Payroll -->
+                <li><a href="payroll.html" data-i18n="payroll"><i class="bi bi-cash-stack"></i>Payroll</a></li>
+                <li><a href="benefits.html" data-i18n="benefits"><i class="bi bi-heart"></i>Benefits</a></li>
+                <!-- Settings -->
                 <li><a href="settings.html" data-i18n="settings"><i class="bi bi-gear"></i>Settings</a></li>
                 <li><a href="#" onclick="logout()" data-i18n="logout"><i class="bi bi-box-arrow-right"></i>Logout</a></li>
             </ul>
@@ -223,48 +235,100 @@
         <!-- Main Content -->
         <div class="main-content">
             <h1 class="section-title" data-i18n="dashboard">Dashboard</h1>
+            
+            <!-- Employee Overview -->
             <div class="tm-card mb-4">
                 <div class="card-header">
-                    <h5 data-i18n="activeVacancies"><i class="bi bi-briefcase me-2"></i>Active Vacancies</h5>
+                    <h5><i class="bi bi-people me-2"></i>Employee Overview</h5>
                 </div>
                 <div class="card-body">
-                    <h2 class="card-title" id="activeVacancies">0</h2>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <h2 class="card-title" id="totalEmployees">0</h2>
+                            <p class="card-subtitle">Total Employees</p>
+                        </div>
+                        <div class="col-md-3">
+                            <h2 class="card-title" id="onDuty">0</h2>
+                            <p class="card-subtitle">On Duty</p>
+                        </div>
+                        <div class="col-md-3">
+                            <h2 class="card-title" id="onLeave">0</h2>
+                            <p class="card-subtitle">On Leave</p>
+                        </div>
+                        <div class="col-md-3">
+                            <h2 class="card-title" id="newHires">0</h2>
+                            <p class="card-subtitle">New Hires (30 days)</p>
+                        </div>
+                    </div>
                 </div>
             </div>
+
+            <!-- Recruitment Overview -->
             <div class="tm-card mb-4">
                 <div class="card-header">
-                    <h5 data-i18n="totalCandidates"><i class="bi bi-people me-2"></i>Total Candidates</h5>
+                    <h5><i class="bi bi-briefcase me-2"></i>Recruitment Overview</h5>
                 </div>
                 <div class="card-body">
-                    <h2 class="card-title" id="totalApplications">0</h2>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <h2 class="card-title" id="activeVacancies">0</h2>
+                            <p class="card-subtitle">Active Vacancies</p>
+                        </div>
+                        <div class="col-md-3">
+                            <h2 class="card-title" id="totalApplications">0</h2>
+                            <p class="card-subtitle">Total Applications</p>
+                        </div>
+                        <div class="col-md-3">
+                            <h2 class="card-title" id="interviewsScheduled">0</h2>
+                            <p class="card-subtitle">Interviews Scheduled</p>
+                        </div>
+                        <div class="col-md-3">
+                            <h2 class="card-title" id="offersPending">0</h2>
+                            <p class="card-subtitle">Offers Pending</p>
+                        </div>
+                    </div>
                 </div>
             </div>
+
+            <!-- Performance Overview -->
             <div class="tm-card mb-4">
                 <div class="card-header">
-                    <h5 data-i18n="onDuty"><i class="bi bi-person-check me-2"></i>On Duty</h5>
+                    <h5><i class="bi bi-graph-up me-2"></i>Performance Overview</h5>
                 </div>
                 <div class="card-body">
-                    <h2 class="card-title" id="onDuty">0</h2>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <h2 class="card-title" id="pendingReviews">0</h2>
+                            <p class="card-subtitle">Pending Reviews</p>
+                        </div>
+                        <div class="col-md-3">
+                            <h2 class="card-title" id="trainingPrograms">0</h2>
+                            <p class="card-subtitle">Active Training</p>
+                        </div>
+                        <div class="col-md-3">
+                            <h2 class="card-title" id="promotions">0</h2>
+                            <p class="card-subtitle">Promotions (30 days)</p>
+                        </div>
+                        <div class="col-md-3">
+                            <h2 class="card-title" id="attritionRate">0%</h2>
+                            <p class="card-subtitle">Attrition Rate</p>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="tm-card mb-4">
-                <div class="card-header">
-                    <h5 data-i18n="onLeave"><i class="bi bi-person-dash me-2"></i>On Leave</h5>
-                </div>
-                <div class="card-body">
-                    <h2 class="card-title" id="onLeave">0</h2>
-                </div>
-            </div>
+
+            <!-- Recent Activity -->
             <div class="tm-card">
                 <div class="card-header">
-                    <h5 data-i18n="recentActivity"><i class="bi bi-clock-history me-2"></i>Recent Activity</h5>
+                    <h5><i class="bi bi-clock-history me-2"></i>Recent Activity</h5>
                 </div>
-                <div class="card-body" id="recentApplicationsList">
-                    <!-- Applications will be loaded here -->
+                <div class="card-body" id="recentActivityList">
+                    <!-- Activity items will be loaded here -->
                 </div>
             </div>
         </div>
     </div>
+
     <!-- Candidate Modal -->
     <div class="modal fade candidate-modal" id="candidateModal" tabindex="-1">
         <div class="modal-dialog modal-lg">
@@ -279,41 +343,84 @@
             </div>
         </div>
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next@21.6.10/dist/umd/i18next.min.js"></script>
     <script src="js/theme-manager.js"></script>
     <script>
-        // Example: Load stats and recent applications (replace with real API calls)
-        document.getElementById('activeVacancies').textContent = 13;
-        document.getElementById('totalApplications').textContent = 42;
-        document.getElementById('onDuty').textContent = 3;
-        document.getElementById('onLeave').textContent = 1;
-        // Example: Load recent applications
-        const recentApplications = [
-            { name: 'John Doe', type: 'Leave', status: 'Approved', date: '2024-05-01', details: 'Out of Town', id: 1 },
-            { name: 'Jane Smith', type: 'On Duty', status: 'Pending', date: '2024-05-02', details: 'Conference', id: 2 },
-            { name: 'Alice Brown', type: 'Leave', status: 'Rejected', date: '2024-05-03', details: 'Family Function', id: 3 },
-        ];
-        function showCandidateModal(id) {
-            const candidate = recentApplications.find(a => a.id === id);
-            if (!candidate) return;
-            document.getElementById('candidateModalBody').innerHTML = `
-                <div><strong>Name:</strong> ${candidate.name}</div>
-                <div><strong>Type:</strong> ${candidate.type}</div>
-                <div><strong>Status:</strong> ${candidate.status}</div>
-                <div><strong>Date:</strong> ${candidate.date}</div>
-                <div><strong>Details:</strong> ${candidate.details}</div>
-            `;
-            new bootstrap.Modal(document.getElementById('candidateModal')).show();
+        // Load dashboard metrics
+        function loadDashboardMetrics() {
+            // Example data - replace with actual API calls
+            const metrics = {
+                employees: {
+                    total: 150,
+                    onDuty: 120,
+                    onLeave: 25,
+                    newHires: 5
+                },
+                recruitment: {
+                    activeVacancies: 13,
+                    totalApplications: 42,
+                    interviewsScheduled: 8,
+                    offersPending: 3
+                },
+                performance: {
+                    pendingReviews: 15,
+                    trainingPrograms: 4,
+                    promotions: 2,
+                    attritionRate: 3.5
+                }
+            };
+
+            // Update employee metrics
+            document.getElementById('totalEmployees').textContent = metrics.employees.total;
+            document.getElementById('onDuty').textContent = metrics.employees.onDuty;
+            document.getElementById('onLeave').textContent = metrics.employees.onLeave;
+            document.getElementById('newHires').textContent = metrics.employees.newHires;
+
+            // Update recruitment metrics
+            document.getElementById('activeVacancies').textContent = metrics.recruitment.activeVacancies;
+            document.getElementById('totalApplications').textContent = metrics.recruitment.totalApplications;
+            document.getElementById('interviewsScheduled').textContent = metrics.recruitment.interviewsScheduled;
+            document.getElementById('offersPending').textContent = metrics.recruitment.offersPending;
+
+            // Update performance metrics
+            document.getElementById('pendingReviews').textContent = metrics.performance.pendingReviews;
+            document.getElementById('trainingPrograms').textContent = metrics.performance.trainingPrograms;
+            document.getElementById('promotions').textContent = metrics.performance.promotions;
+            document.getElementById('attritionRate').textContent = metrics.performance.attritionRate + '%';
         }
-        document.getElementById('recentApplicationsList').innerHTML = recentApplications.map(a => `
-            <div class="d-flex align-items-center justify-content-between mb-2 p-2 rounded" style="background:#f5f7fa;">
-                <div>
-                    <strong>${a.type}</strong> - ${a.details} <span class="badge bg-secondary">${a.status}</span>
+
+        // Load recent activity
+        function loadRecentActivity() {
+            const activities = [
+                { type: 'employee', action: 'New hire', name: 'John Doe', department: 'Engineering', date: '2024-05-01' },
+                { type: 'leave', action: 'Leave request', name: 'Jane Smith', status: 'Approved', date: '2024-05-02' },
+                { type: 'performance', action: 'Performance review', name: 'Alice Brown', rating: '4.5/5', date: '2024-05-03' },
+                { type: 'training', action: 'Training completed', name: 'Bob Wilson', course: 'Leadership Skills', date: '2024-05-04' }
+            ];
+
+            const activityList = document.getElementById('recentActivityList');
+            activityList.innerHTML = activities.map(activity => `
+                <div class="d-flex align-items-center justify-content-between mb-2 p-2 rounded" style="background:#f5f7fa;">
+                    <div>
+                        <strong>${activity.action}</strong> - ${activity.name}
+                        ${activity.department ? `<span class="badge bg-info">${activity.department}</span>` : ''}
+                        ${activity.status ? `<span class="badge bg-success">${activity.status}</span>` : ''}
+                        ${activity.rating ? `<span class="badge bg-warning">${activity.rating}</span>` : ''}
+                        ${activity.course ? `<span class="badge bg-primary">${activity.course}</span>` : ''}
+                    </div>
+                    <small class="text-muted">${activity.date}</small>
                 </div>
-                <button class="btn btn-outline-primary btn-sm" onclick="showCandidateModal(${a.id})">View</button>
-            </div>
-        `).join('');
+            `).join('');
+        }
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', () => {
+            loadDashboardMetrics();
+            loadRecentActivity();
+        });
+
         function logout() {
             localStorage.removeItem('token');
             localStorage.removeItem('userRole');
