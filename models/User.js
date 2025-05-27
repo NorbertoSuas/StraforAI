@@ -46,26 +46,6 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    connections: {
-        linkedin: {
-            connected: {
-                type: Boolean,
-                default: false
-            },
-            profileName: String,
-            profileId: String,
-            accessToken: String,
-            refreshToken: String
-        },
-        occ: {
-            connected: {
-                type: Boolean,
-                default: false
-            },
-            email: String,
-            accessToken: String
-        }
-    },
     createdAt: {
         type: Date,
         default: Date.now

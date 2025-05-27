@@ -25,32 +25,6 @@ DATA_SOURCES = {
         'enabled': True,
         'collection': 'candidates',
         'refresh_interval': 3600,  # 1 hour
-    },
-    'linkedin': {
-        'enabled': False,  # Will be enabled when API credentials are available
-        'api_version': 'v2',
-        'refresh_interval': 3600,
-        'required_fields': [
-            'profile_url',
-            'headline',
-            'summary',
-            'experience',
-            'education',
-            'skills'
-        ]
-    },
-    'occ': {
-        'enabled': False,  # Will be enabled when API credentials are available
-        'api_version': '1.0',
-        'refresh_interval': 3600,
-        'required_fields': [
-            'job_title',
-            'company',
-            'location',
-            'description',
-            'requirements',
-            'skills'
-        ]
     }
 }
 
@@ -64,22 +38,4 @@ STORAGE_CONFIG = {
 
 # Create necessary directories
 for path in STORAGE_CONFIG.values():
-    os.makedirs(path, exist_ok=True)
-
-# API Configuration
-API_CONFIG = {
-    'linkedin': {
-        'base_url': 'https://api.linkedin.com/v2',
-        'auth_url': 'https://www.linkedin.com/oauth/v2/authorization',
-        'token_url': 'https://www.linkedin.com/oauth/v2/accessToken',
-        'scopes': ['r_liteprofile', 'r_emailaddress', 'w_member_social'],
-        'redirect_uri': 'http://localhost:3000/auth/linkedin/callback'
-    },
-    'occ': {
-        'base_url': 'https://api.occ.com/v1',
-        'auth_url': 'https://api.occ.com/oauth/authorize',
-        'token_url': 'https://api.occ.com/oauth/token',
-        'scopes': ['read_jobs', 'read_candidates', 'write_jobs'],
-        'redirect_uri': 'http://localhost:3000/auth/occ/callback'
-    }
-} 
+    os.makedirs(path, exist_ok=True) 

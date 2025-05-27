@@ -49,20 +49,13 @@ router.get('/api-config', isAdmin, async (req, res) => {
     try {
         const settings = await Settings.findOne() || new Settings();
         res.json({
-            linkedin: {
-                clientId: settings.linkedin?.clientId || '',
-                clientSecret: settings.linkedin?.clientSecret || '',
-                redirectUri: settings.linkedin?.redirectUri || ''
-            },
-            occ: {
-                apiKey: settings.occ?.apiKey || '',
-                apiSecret: settings.occ?.apiSecret || '',
-                environment: settings.occ?.environment || 'sandbox'
-            }
+            // Return only non-API related settings
+            theme: settings.theme || 'light',
+            notifications: settings.notifications || true
         });
     } catch (error) {
-        console.error('Error fetching API configurations:', error);
-        res.status(500).json({ message: 'Error fetching API configurations' });
+        console.error('Error fetching settings:', error);
+        res.status(500).json({ message: 'Error fetching settings' });
     }
 });
 

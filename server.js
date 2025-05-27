@@ -4,9 +4,7 @@ const cors = require('cors');
 const path = require('path');
 const session = require('express-session');
 const multer = require('multer');
-const { postToAllPlatforms } = require('./services/external-postings');
 const settingsRoutes = require('./routes/settings');
-const adminIntegrationsRoutes = require('./routes/admin/integrations');
 const adminAccountsRoutes = require('./routes/admin-accounts');
 const userRoutes = require('./routes/user');
 const fs = require('fs');
@@ -143,7 +141,6 @@ app.use('/api/hr-accounts', hrAccountRoutes);
 app.use('/api/admin-accounts', adminAccountsRoutes);
 app.use('/api/countries', countriesRoutes);
 app.use('/api/settings', settingsRoutes);
-app.use('/api/admin/integrations', adminIntegrationsRoutes);
 app.use('/api/user', userRoutes);
 
 // Resume upload endpoint
@@ -205,7 +202,41 @@ app.get('/api/health', (req, res) => {
 // Vacancies endpoints
 app.get('/api/vacancies', async (req, res) => {
     try {
-        const vacancies = await Vacancy.find();
+        const {
+            department,
+            location,
+            type,
+            salaryMin,
+            salaryMax,
+            skills,
+            search
+        } = req.query;
+
+        // Build MongoDB query
+        const query = {};
+        if (department) query.department = department;
+        if (location) query.location = location;
+        if (type) query.type = type;
+        if (salaryMin || salaryMax) {
+            query['salary_range.min'] = salaryMin ? { $gte: Number(salaryMin) } : { $exists: true };
+            query['salary_range.max'] = salaryMax ? { ...query['salary_range.min'], $lte: Number(salaryMax) } : query['salary_range.min'];
+        }
+        if (skills) {
+            // skills can be comma-separated
+            const skillsArr = Array.isArray(skills) ? skills : skills.split(',');
+            query.skills_required = { $all: skillsArr };
+        }
+        if (search) {
+            const regex = new RegExp(search, 'i');
+            query.$or = [
+                { title: regex },
+                { department: regex },
+                { location: regex },
+                { description: regex }
+            ];
+        }
+
+        const vacancies = await Vacancy.find(query);
         res.json(vacancies);
     } catch (error) {
         console.error('Error fetching vacancies:', error);

@@ -114,32 +114,131 @@
         }
 
         .search-container {
-            max-width: 600px;
+            max-width: 900px;
             margin: 2rem auto 3rem auto;
             position: relative;
             z-index: 2;
         }
 
-        .search-input {
+        .filter-bar-floating {
+            position: sticky;
+            top: 2rem;
+            z-index: 10;
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(12px);
+            border-radius: 2rem;
+            box-shadow: 0 8px 32px rgba(35,49,60,0.13);
+            padding: 1.2rem 2rem;
+            margin: 0 auto 2rem auto;
+            max-width: 1100px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.7rem;
+        }
+        .filter-scroll {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
             width: 100%;
-            padding: 1rem 1.5rem;
-            border-radius: 16px;
-            border: 2px solid var(--border-color);
-            font-size: 1.08rem;
-            background-color: var(--input-bg);
-            color: var(--input-text);
-            box-shadow: var(--card-shadow);
-            transition: all 0.3s ease;
+            justify-content: center;
+            align-items: stretch;
+        }
+        .filter-group {
+            display: flex;
+            align-items: center;
+            background: #f7fafd;
+            border-radius: 2rem;
+            padding: 0.2rem 1rem;
+            box-shadow: 0 1px 4px rgba(35,49,60,0.04);
+            min-width: 160px;
+            flex: 1 1 180px;
+            max-width: 260px;
+            transition: box-shadow 0.2s;
+        }
+        .filter-group:focus-within, .filter-group:hover {
+            box-shadow: 0 4px 16px rgba(35,49,60,0.10);
+        }
+        .filter-icon {
+            margin-right: 0.5rem;
+            color: #009fe3;
+            font-size: 1.2rem;
+        }
+        .form-select, .form-control {
+            border: none;
+            background: transparent;
+            font-size: 1rem;
             outline: none;
+            box-shadow: none;
+            min-width: 100px;
+            width: 100%;
         }
-
-        .search-input:focus {
-            border-color: var(--accent-color);
-            box-shadow: 0 0 0 0.2rem rgba(74, 108, 247, 0.18);
+        .search-group {
+            min-width: 200px;
+            flex: 2 1 240px;
         }
-
-        .search-input::placeholder {
-            color: var(--text-secondary);
+        .filter-actions {
+            display: flex;
+            gap: 0.7rem;
+            margin-top: 0.5rem;
+            justify-content: center;
+            width: 100%;
+        }
+        .btn-light {
+            background: #f7fafd;
+            color: #009fe3;
+            border: 1.5px solid #009fe3;
+            border-radius: 2rem;
+            padding: 0.5rem 1.2rem;
+            transition: background 0.2s, color 0.2s;
+            min-width: 120px;
+        }
+        .btn-light:hover {
+            background: #009fe3;
+            color: #fff;
+        }
+        .btn-primary {
+            background: #009fe3;
+            color: #fff;
+            border: none;
+            border-radius: 2rem;
+            padding: 0.5rem 1.2rem;
+            font-weight: 600;
+            transition: background 0.2s;
+            min-width: 120px;
+        }
+        .btn-primary:hover {
+            background: #007bb8;
+        }
+        @media (max-width: 1100px) {
+            .filter-bar-floating {
+                max-width: 99vw;
+                padding: 0.7rem 0.2rem;
+            }
+            .filter-group, .search-group {
+                min-width: 120px;
+                max-width: 100%;
+            }
+        }
+        @media (max-width: 700px) {
+            .filter-scroll {
+                flex-direction: column;
+                gap: 0.7rem;
+                align-items: stretch;
+            }
+            .filter-group, .search-group {
+                min-width: 100%;
+                max-width: 100%;
+                flex: 1 1 100%;
+            }
+            .filter-actions {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            .btn-light, .btn-primary {
+                width: 100%;
+                min-width: unset;
+            }
         }
 
         .row.g-4 {
@@ -372,8 +471,53 @@
             <h1>Join Our Team</h1>
             <p>Discover opportunities to shape the future of intelligence with STRAFOR.AI</p>
             <div class="search-container">
-                <input type="text" class="search-input" id="searchInput" 
-                       placeholder="Search by job title, department, or location">
+                <div class="filter-bar-floating">
+                    <div class="filter-scroll">
+                        <div class="filter-group">
+                            <span class="filter-icon"><i class="bi bi-layers"></i></span>
+                            <select id="departmentSelect" class="form-select">
+                                <option value="">All Departments</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <span class="filter-icon"><i class="bi bi-geo-alt"></i></span>
+                            <select id="locationSelect" class="form-select">
+                                <option value="">All Locations</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <span class="filter-icon"><i class="bi bi-briefcase"></i></span>
+                            <select id="jobTypeSelect" class="form-select">
+                                <option value="">All Job Types</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <span class="filter-icon"><i class="bi bi-currency-dollar"></i></span>
+                            <select id="salaryRangeSelect" class="form-select">
+                                <option value="">$1000+</option>
+                                <option value="0-50000">$0 - $50,000</option>
+                                <option value="50000-100000">$50,000 - $100,000</option>
+                                <option value="100000-150000">$100,000 - $150,000</option>
+                                <option value="150000+">$150,000+</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <span class="filter-icon"><i class="bi bi-stars"></i></span>
+                            <select id="skillsSelect" class="form-select" multiple>
+                                <option value="">Skills</option>
+                            </select>
+                        </div>
+                        <div class="filter-group search-group">
+                            <span class="filter-icon"><i class="bi bi-search"></i></span>
+                            <input type="text" id="searchInput" class="form-control" placeholder="Search...">
+                        </div>
+                    </div>
+                    <div class="filter-actions">
+                        <button id="clearFilters" class="btn btn-light"><i class="bi bi-x-circle"></i> Clear</button>
+                        <button id="applyFilters" class="btn btn-primary"><i class="bi bi-funnel"></i> Apply</button>
+                    </div>
+                </div>
+                <div id="activeFilters" class="mt-2 d-flex flex-wrap gap-2"></div>
             </div>
         </div>
 
@@ -433,8 +577,8 @@
             return response.json();
         }
 
-        // Function to fetch and display vacancies
-        async function loadVacancies() {
+        // Function to fetch and display vacancies with filters
+        async function loadVacancies(withFilters = false) {
             const loadingSpinner = document.getElementById('loadingSpinner');
             const errorAlert = document.getElementById('errorAlert');
             const noResultsAlert = document.getElementById('noResultsAlert');
@@ -445,9 +589,44 @@
                 errorAlert.classList.add('d-none');
                 noResultsAlert.classList.add('d-none');
 
-                const data = await makeAPIRequest('/api/vacancies');
+                // Build query string from filters
+                let query = '';
+                if (withFilters) {
+                    const params = new URLSearchParams();
+                    if (departmentSelect.value) params.append('department', departmentSelect.value);
+                    if (locationSelect.value) params.append('location', locationSelect.value);
+                    if (jobTypeSelect.value) params.append('type', jobTypeSelect.value);
+                    if (salaryRangeSelect.value) {
+                        const [min, max] = salaryRangeSelect.value.split('-');
+                        if (min) params.append('salaryMin', min);
+                        if (max && max !== '+') params.append('salaryMax', max);
+                    }
+                    const selectedSkills = Array.from(skillsSelect.selectedOptions).map(opt => opt.value).filter(Boolean);
+                    if (selectedSkills.length > 0) params.append('skills', selectedSkills.join(','));
+                    if (searchInput.value.trim()) params.append('search', searchInput.value.trim());
+                    query = '?' + params.toString();
+                }
+
+                const data = await makeAPIRequest(`/api/vacancies${query}`);
                 const activeVacancies = data.filter(v => v.status === 'Active');
                 
+                // Populate filter dropdowns (only on initial load)
+                if (!withFilters) {
+                const locations = Array.from(new Set(activeVacancies.map(v => v.location).filter(Boolean)));
+                    const departments = Array.from(new Set(activeVacancies.map(v => v.department).filter(Boolean)));
+                    const jobTypes = Array.from(new Set(activeVacancies.map(v => v.type).filter(Boolean)));
+                    const skills = Array.from(new Set(activeVacancies.flatMap(v => v.skills_required).filter(Boolean)));
+
+                    locationSelect.innerHTML = '<option value="">All Locations</option>' +
+                        locations.map(loc => `<option value="${loc}">${loc}</option>`).join('');
+                    departmentSelect.innerHTML = '<option value="">All Departments</option>' +
+                        departments.map(dept => `<option value="${dept}">${dept}</option>`).join('');
+                    jobTypeSelect.innerHTML = '<option value="">All Job Types</option>' +
+                        jobTypes.map(type => `<option value="${type}">${type}</option>`).join('');
+                    skillsSelect.innerHTML = '<option value="">Select Skills</option>' +
+                        skills.map(skill => `<option value="${skill}">${skill}</option>`).join('');
+                }
+
                 container.innerHTML = '';
                 if (activeVacancies.length === 0) {
                     noResultsAlert.classList.remove('d-none');
@@ -463,13 +642,14 @@
                 errorAlert.classList.remove('d-none');
             } finally {
                 loadingSpinner.classList.add('d-none');
+                updateActiveFilters();
             }
         }
 
         // Function to create vacancy card
         function createVacancyCard(vacancy) {
             const col = document.createElement('div');
-            col.className = 'col-12 col-md-6 col-lg-4 d-flex align-items-stretch';
+            col.className = 'col-12 col-md-6 col-lg-4 d-flex align-items-stretch vacancy-col';
 
             // Ensure responsibilities and benefits are arrays
             let responsibilities = [];
@@ -529,35 +709,96 @@
             return col;
         }
 
-        // Search functionality
+        // Search functionality with debouncing
+        let debounceTimer;
         const searchInput = document.getElementById('searchInput');
-        searchInput.addEventListener('input', filterVacancies);
+        const locationSelect = document.getElementById('locationSelect');
+        const departmentSelect = document.getElementById('departmentSelect');
+        const jobTypeSelect = document.getElementById('jobTypeSelect');
+        const salaryRangeSelect = document.getElementById('salaryRangeSelect');
+        const skillsSelect = document.getElementById('skillsSelect');
+        const clearFiltersBtn = document.getElementById('clearFilters');
+        const activeFiltersContainer = document.getElementById('activeFilters');
 
-        function filterVacancies() {
-            const searchTerm = searchInput.value.toLowerCase();
-            const cards = document.querySelectorAll('.vacancy-card');
-            let hasResults = false;
-
-            cards.forEach(card => {
-                const title = card.querySelector('.vacancy-title').textContent.toLowerCase();
-                const dept = card.querySelector('.vacancy-meta:nth-of-type(1)').textContent.toLowerCase();
-                const loc = card.querySelector('.vacancy-meta:nth-of-type(2)').textContent.toLowerCase();
-                
-                const matches = title.includes(searchTerm) || 
-                              dept.includes(searchTerm) || 
-                              loc.includes(searchTerm);
-                
-                card.closest('.col-12').style.display = matches ? 'block' : 'none';
-                if (matches) hasResults = true;
-            });
-
-            document.getElementById('noResultsAlert').classList.toggle('d-none', hasResults);
+        function debounce(func, delay) {
+            return function(...args) {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => func.apply(this, args), delay);
+            };
         }
 
-        // Load vacancies when page loads
+        function updateActiveFilters() {
+            const filters = [];
+            if (searchInput.value) filters.push({ type: 'search', value: searchInput.value });
+            if (locationSelect.value) filters.push({ type: 'location', value: locationSelect.value });
+            if (departmentSelect.value) filters.push({ type: 'department', value: departmentSelect.value });
+            if (jobTypeSelect.value) filters.push({ type: 'jobType', value: jobTypeSelect.value });
+            if (salaryRangeSelect.value) filters.push({ type: 'salary', value: salaryRangeSelect.value });
+            Array.from(skillsSelect.selectedOptions).forEach(option => {
+                if (option.value) filters.push({ type: 'skill', value: option.value });
+            });
+
+            activeFiltersContainer.innerHTML = filters.map(filter => `
+                <div class="active-filter" data-type="${filter.type}" data-value="${filter.value}">
+                    ${filter.value}
+                    <i class="bi bi-x"></i>
+                </div>
+            `).join('');
+
+            // Add click handlers to remove individual filters
+            activeFiltersContainer.querySelectorAll('.active-filter').forEach(filter => {
+                filter.addEventListener('click', () => {
+                    const type = filter.dataset.type;
+                    const value = filter.dataset.value;
+                    switch(type) {
+                        case 'search':
+                            searchInput.value = '';
+                            break;
+                        case 'location':
+                            locationSelect.value = '';
+                            break;
+                        case 'department':
+                            departmentSelect.value = '';
+                            break;
+                        case 'jobType':
+                            jobTypeSelect.value = '';
+                            break;
+                        case 'salary':
+                            salaryRangeSelect.value = '';
+                            break;
+                        case 'skill':
+                            Array.from(skillsSelect.options).forEach(option => {
+                                if (option.value === value) option.selected = false;
+                            });
+                            break;
+                    }
+                    loadVacancies(true);
+                });
+            });
+        }
+
+        // Attach filter event listeners to reload vacancies from backend
+        const debouncedLoadWithFilters = debounce(() => loadVacancies(true), 300);
+        searchInput.addEventListener('input', debouncedLoadWithFilters);
+        locationSelect.addEventListener('change', () => loadVacancies(true));
+        departmentSelect.addEventListener('change', () => loadVacancies(true));
+        jobTypeSelect.addEventListener('change', () => loadVacancies(true));
+        salaryRangeSelect.addEventListener('change', () => loadVacancies(true));
+        skillsSelect.addEventListener('change', () => loadVacancies(true));
+        clearFiltersBtn.addEventListener('click', () => {
+            searchInput.value = '';
+            locationSelect.value = '';
+            departmentSelect.value = '';
+            jobTypeSelect.value = '';
+            salaryRangeSelect.value = '';
+            Array.from(skillsSelect.options).forEach(option => option.selected = false);
+            loadVacancies(true);
+        });
+
+        // Initial load (populate dropdowns and show all vacancies)
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('video-background').classList.add('video-zoom');
-            loadVacancies();
+            loadVacancies(false);
         });
     </script>
 </body>
